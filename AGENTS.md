@@ -1,60 +1,63 @@
 # Spécifications du Projet - Kiffane.com
 
-## 1. Vue d'ensemble du Projet
+## 1. Vue d'ensemble de la Marque & du Produit
 - **Nom de domaine :** `kiffane.com`
-- **Modèle économique :** E-commerce Mono-produit en **Paiement à la Livraison (COD - Cash On Delivery)** ciblant l'Algérie (58 Wilayas).
-- **Hébergement & Infrastructure :** Cloudflare Pages (Statique + Serverless Pages Functions).
+- **Marque :** Kiffane (Maroquinerie de luxe accessible en cuir véritable).
+- **Produit Principal :** **Sac Cabas Laila Kiffane de taille moyenne en cuir véritable** (Inspiré des lignes intemporelles de maroquinerie haut de gamme).
+  - **Matière :** 100% Cuir véritable grainé résistant aux rayures, finitions métalliques dorées polies, pieds métalliques de protection.
+  - **Coloris :** Noir Profond, Beige Taupe, Blanc Crème.
+  - **Prix de vente :** 9 000 DA *(Prix barré : 11 500 DA, -22% de remise de lancement)*.
+- **Public Cible :** Femmes actives algériennes (22-45 ans), universités, milieu professionnel, sur les 58 Wilayas (Alger, Oran, Sétif, Constantine, Annaba, etc.).
 - **Fournisseur / Sourcing :** Opal'o Logistique (Sourcing Chine & approvisionnement).
-- **Partenaires Logistiques / Livraison :** Yalidine Express / eDelivery Express.
+- **Partenaires Logistiques :** Yalidine Express & eDelivery Express (Livraison à domicile & Stop Desk 58 Wilayas).
+- **Service Client & WhatsApp :** `+213 772 84 79 46`
 
 ---
 
 ## 2. Architecture du Tunnel de Vente (Funnel)
 
 ```
-[ Landing Page Mono-Produit ] 
-       │ (Avec Order Bump dans le formulaire COD)
-       ▼
-[ Soumission du Formulaire COD ] ── (Création du lead / commande)
+[ 1. Landing Page Mono-Produit ]
+  • Sélecteur dynamique de couleur (Noir / Beige / Crème)
+  • Formulaire COD 58 Wilayas (Domicile / Stop Desk)
+  • ORDER BUMP : Portefeuille en cuir assorti (+2 500 DA au lieu de 4 500 DA)
        │
        ▼
-[ Page UPSELL ] ─────────── (Accepte : ajout au panier) ──► [ Page MERCI ]
-       │ (Refuse)
+[ Soumission du Formulaire COD ] ──► API /functions/api/submit-order.js
+       │
        ▼
-[ Page DOWNSELL ] ───────── (Accepte ou Refuse) ──────────► [ Page MERCI ]
+[ 2. Page UPSELL (Post-Achat) ]
+  • Offre : Kit de Soin & Baume Nourrissant Cuir + Chiffon microfibre (+1 200 DA au lieu de 2 500 DA)
+  • Frais de port supplémentaires : 0 DA
+       │
+       ├─► [ Accepte ] ────────────────────────┐
+       │                                       │
+       ▼ (Refuse)                              │
+[ 3. Page DOWNSELL (Repli) ]                   │
+  • Offre : Porte-clés & Bijou de sac en cuir (+800 DA au lieu de 1 500 DA)
+  • Frais de port supplémentaires : 0 DA      │
+       │                                       │
+       ├─► [ Accepte ou Refuse ]               │
+       │                                       │
+       ▼                                       ▼
+[ 4. Page MERCI / Confirmation ] ◄─────────────┘
+  • Récapitulatif dynamique complet (Produits + Wilaya + Frais de livraison + Total en DA)
+  • Réassurance forte : Notification d'appel du service client avant expédition
+  • Bouton direct WhatsApp vers +213 772 84 79 46
 ```
 
-### Pages du Funnel :
-1. **`public/index.html` (Landing Page)** :
-   - Présentation persuasive du produit principal (Accroche, Problème/Solution, Démonstrations, Avis clients).
-   - Formulaire de commande COD optimisé conversion :
-     - Nom complet, Téléphone (validation indicatifs 05/06/07), Wilaya (58 wilayas), Commune, Adresse.
-     - Mode de livraison : À domicile ou Stop Desk (bureau Yalidine).
-     - **Order Bump** : Case à cocher pour ajouter un produit accessoire / pack complémentaire à prix préférentiel.
-2. **`public/upsell.html` (Offre Upsell Post-Achat)** :
-   - Offre irrésistible présentée après validation initiale.
-   - Ajout en un clic à la commande en cours sans ressaisie des coordonnées.
-3. **`public/downsell.html` (Offre Downsell de repli)** :
-   - Alternative plus abordable si le client décline l'Upsell.
-4. **`public/merci.html` (Confirmation de Commande)** :
-   - Récapitulatif clair de la commande (Produits + Frais de livraison + Total TTC en DZD).
-   - Message de réassurance : confirmation téléphonique avant expédition.
-   - Bouton de contact direct WhatsApp.
-
 ---
 
-## 3. Stack Technique & Directives de Développement
+## 3. Stack Technique & Fichiers du Projet
 
-- **Frontend :** HTML5 sémantique, Tailwind CSS (via CDN ou build léger), JavaScript Vanilla (sans framework lourd pour un temps de chargement instantané < 1s).
-- **Backend / API :** Cloudflare Pages Functions (`/functions/api/submit-order.js`).
-- **Gestion des Wilayas :** `public/js/wilayas.js` (Liste complète des 58 Wilayas algériennes avec tarifs Stop Desk / Domicile).
-- **Intégrations futures :** 
-  - Webhooks vers Google Sheets / Notion / Telegram Bot pour notification en direct de l'équipe d'appels de confirmation.
-  - Connexion API Yalidine / eDelivery pour génération automatique des bordereaux d'expédition.
-
----
-
-## 4. Règles de Conception & Conversion
-- **Mobile First :** +85% du trafic e-commerce COD provient des smartphones (Instagram / TikTok / Facebook Ads).
-- **Clarté des Prix :** Affichage systématique en Dinars Algériens (**DZD** / **DA**).
-- **Réassurance continue :** Badges "Paiement à la livraison", "Garantie échange 100%", "Livraison rapide 58 Wilayas".
+- **Frontend :** HTML5, Tailwind CSS, JavaScript Vanilla ultra-léger (zéro framework lourd, temps de chargement < 1s).
+- **Assets Visuels :** `public/assets/`
+  - `sac-noir.jpg` : Visuel studio haute résolution du sac en cuir noir.
+  - `sac-beige.jpg` : Visuel studio du sac en cuir beige taupe.
+  - `sac-creme.jpg` : Visuel studio du sac en cuir blanc crème.
+  - `portefeuille.jpg` : Visuel studio du portefeuille compagnon (Order Bump).
+  - `kit-soin.jpg` : Visuel studio du kit baume nourrissant cuir (Upsell).
+  - `porte-cles.jpg` : Visuel studio du porte-clés & bijou de sac (Downsell).
+- **Base Wilayas :** `public/js/wilayas.js` (58 Wilayas avec tarifs Stop Desk & Domicile).
+- **Backend Serverless :** `functions/api/submit-order.js` (Cloudflare Pages Functions).
+- **Déploiement :** Cloudflare Pages connecté au dépôt GitHub `lotfirebiai/Kiffane`.

@@ -1,6 +1,6 @@
 /**
  * Cloudflare Pages Function : /api/submit-order
- * Réception et traitement des commandes COD (Cash On Delivery)
+ * Réception et traitement des commandes COD (Cash On Delivery) pour Kiffane.com
  */
 export async function onRequestPost(context) {
   try {
@@ -13,9 +13,13 @@ export async function onRequestPost(context) {
       wilaya,
       commune,
       address,
-      deliveryType = "home", // "home" ou "desk"
+      deliveryType = "home",
+      color = "Noir Profond",
+      productName = "Sac Cabas Laila Kiffane (Cuir Véritable)",
+      productPrice = 9000,
       productQty = 1,
       includeBump = false,
+      bumpPrice = 2500,
       upsell = null,
       downsell = null,
     } = body;
@@ -23,7 +27,7 @@ export async function onRequestPost(context) {
     // Validation minimale
     if (!fullName || !phone || !wilaya) {
       return new Response(
-        JSON.stringify({ error: "Veuillez renseigner votre nom, téléphone et wilaya." }),
+        JSON.stringify({ error: "Veuillez renseigner votre nom, numéro de téléphone et wilaya." }),
         { status: 400, headers: { "Content-Type": "application/json" } }
       );
     }
@@ -44,21 +48,26 @@ export async function onRequestPost(context) {
         deliveryType,
       },
       cart: {
+        productName,
+        color,
+        productPrice,
         productQty,
         includeBump,
+        bumpPrice: includeBump ? bumpPrice : 0,
         upsell,
         downsell,
       },
-      status: "PENDING_CONFIRMATION", // En attente d'appel client
+      status: "PENDING_CONFIRMATION", // En attente d'appel de confirmation par le service client
     };
 
-    // Optionnel : Envoi webhook Telegram / Google Sheets si configuré dans Cloudflare env
+    // Optionnel : Envoi notification Telegram si configuré dans Cloudflare Environment Variables
     if (env && env.TELEGRAM_BOT_TOKEN && env.TELEGRAM_CHAT_ID) {
-      const message = `🛍️ *Nouvelle commande COD #${orderId}*\n\n` +
+      const message = `🛍️ *NOUVELLE COMMANDE KIFFANE #${orderId}*\n\n` +
         `👤 *Client :* ${fullName}\n` +
-        `📞 *Tél :* ${phone}\n` +
-        `📍 *Wilaya :* ${wilaya} (${deliveryType === "desk" ? "Stop Desk" : "À domicile"})\n` +
-        `📦 *Qté :* ${productQty} | *Bump :* ${includeBump ? "OUI" : "NON"}\n` +
+        `📞 *Téléphone :* ${phone}\n` +
+        `📍 *Destination :* ${wilaya} (${deliveryType === "desk" ? "Stop Desk Yalidine" : "À Domicile"})\n` +
+        `👜 *Sac :* ${productName} - *${color}*\n` +
+        `👛 *Portefeuille (Order Bump) :* ${includeBump ? "OUI (+2500 DA)" : "NON"}\n` +
         `⏰ *Date :* ${new Date().toLocaleString("fr-FR", { timeZone: "Africa/Algiers" })}`;
 
       try {
@@ -80,7 +89,7 @@ export async function onRequestPost(context) {
       JSON.stringify({
         success: true,
         orderId,
-        message: "Commande enregistrée avec succès",
+        message: "Commande Kiffane enregistrée avec succès",
         order: orderRecord,
       }),
       { status: 200, headers: { "Content-Type": "application/json" } }
