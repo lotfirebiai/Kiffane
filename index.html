@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="fr" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Kiffane | Le Sac Cabas en Cuir Véritable d'Exception</title>
+  <meta name="description" content="Découvrez le sac cabas moyen Kiffane en cuir véritable. Élégance intemporelle, finitions dorées et durabilité garantie. Paiement à la livraison 58 Wilayas." />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: { 50: '#fdf8f6', 100: '#f2e8e5', 500: '#c2785c', 600: '#a35538', 700: '#843d23' }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    .color-radio:checked + label {
+      border-color: #a35538;
+      box-shadow: 0 0 0 2px #a35538;
+    }
+  </style>
+</head>
+<body class="bg-[#faf8f5] text-stone-800 antialiased selection:bg-brand-500 selection:text-white">
+
+  <!-- Top Announcement Bar -->
+  <div class="bg-stone-900 text-stone-200 text-xs sm:text-sm py-2.5 px-4 text-center font-medium tracking-wide">
+    ✨ <strong>OFFRE DE LANCEMENT KIFFANE :</strong> Remise de 2 500 DA + Paiement à la réception dans 58 Wilayas !
+  </div>
+
+  <!-- Header -->
+  <header class="bg-white/90 backdrop-blur-md border-b border-stone-200 sticky top-0 z-40">
+    <div class="max-w-4xl mx-auto px-4 h-16 flex items-center justify-between">
+      <div class="flex items-center space-x-2">
+        <span class="text-2xl font-serif font-black tracking-widest text-stone-900">KIFFANE</span>
+        <span class="text-[10px] font-sans uppercase tracking-widest text-brand-600 bg-brand-100 px-2 py-0.5 rounded font-bold">Cuir Véritable</span>
+      </div>
+      <a href="#commander" class="bg-brand-600 hover:bg-brand-700 text-white px-5 py-2 rounded-full font-bold text-xs sm:text-sm shadow-md transition transform active:scale-95">
+        Commander <i class="fa-solid fa-arrow-down ml-1"></i>
+      </a>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="max-w-4xl mx-auto px-4 pt-8 pb-12 sm:pt-12 sm:pb-16">
+    <div class="text-center mb-8 sm:mb-10">
+      <div class="inline-flex items-center space-x-1.5 bg-brand-100 text-brand-700 text-xs font-bold px-3.5 py-1.5 rounded-full uppercase tracking-wider mb-4">
+        <i class="fa-solid fa-star text-amber-500"></i>
+        <span>Élu Sac Tendance 2026 par les Femmes Actives</span>
+      </div>
+      <h1 class="text-3xl sm:text-4xl md:text-5xl font-serif font-black text-stone-900 leading-tight">
+        L'Élégance Intemporelle Du Cuir Véritable Qui Dure
+      </h1>
+      <p class="text-stone-600 mt-3 text-base sm:text-lg max-w-2xl mx-auto leading-relaxed">
+        Fini les sacs synthétiques qui s'écaillent après quelques mois. Adoptez le <strong>Cabas Laila Kiffane</strong> : un cuir noble texturé, une organisation interne parfaite et des finitions dorées d'exception.
+      </p>
+    </div>
+
+    <!-- Product Showcase Gallery & Highlights -->
+    <div class="grid md:grid-cols-2 gap-8 items-center bg-white p-6 sm:p-8 rounded-3xl shadow-sm border border-stone-200">
+      
+      <!-- Interactive Photo Gallery -->
+      <div class="space-y-4">
+        <div class="relative rounded-2xl overflow-hidden shadow-inner border border-stone-100 aspect-square bg-stone-100">
+          <img id="mainProductImg" src="/assets/sac-noir.jpg" alt="Sac Cabas Laila Kiffane en Cuir Véritable" class="w-full h-full object-cover transition-opacity duration-300" />
+          <span class="absolute top-3 left-3 bg-stone-900 text-white font-bold text-xs px-3 py-1 rounded-full shadow">
+            100% Cuir Véritable
+          </span>
+          <span class="absolute top-3 right-3 bg-red-600 text-white font-black text-xs px-2.5 py-1 rounded-full shadow">
+            -22% REMISE
+          </span>
+        </div>
+
+        <!-- Color Selector Preview Thumbnails -->
+        <div class="space-y-2">
+          <span class="text-xs font-bold uppercase tracking-wider text-stone-500">Choisissez votre couleur :</span>
+          <div class="grid grid-cols-3 gap-2">
+            <button type="button" onclick="selectColor('noir', '/assets/sac-noir.jpg', 'Noir Profond')"
+              class="color-btn border-2 border-brand-600 bg-stone-50 rounded-xl p-1.5 flex flex-col items-center text-center transition">
+              <img src="/assets/sac-noir.jpg" class="w-12 h-12 object-cover rounded-lg mb-1" alt="Noir" />
+              <span class="text-[11px] font-bold text-stone-800">Noir Profond</span>
+            </button>
+            <button type="button" onclick="selectColor('beige', '/assets/sac-beige.jpg', 'Beige Taupe')"
+              class="color-btn border border-stone-200 bg-stone-50 rounded-xl p-1.5 flex flex-col items-center text-center hover:border-brand-500 transition">
+              <img src="/assets/sac-beige.jpg" class="w-12 h-12 object-cover rounded-lg mb-1" alt="Beige" />
+              <span class="text-[11px] font-bold text-stone-800">Beige Taupe</span>
+            </button>
+            <button type="button" onclick="selectColor('creme', '/assets/sac-creme.jpg', 'Blanc Crème')"
+              class="color-btn border border-stone-200 bg-stone-50 rounded-xl p-1.5 flex flex-col items-center text-center hover:border-brand-500 transition">
+              <img src="/assets/sac-creme.jpg" class="w-12 h-12 object-cover rounded-lg mb-1" alt="Crème" />
+              <span class="text-[11px] font-bold text-stone-800">Blanc Crème</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Key Benefits List -->
+      <div class="space-y-5">
+        <div class="flex items-start space-x-3.5">
+          <div class="w-9 h-9 rounded-full bg-brand-100 text-brand-700 flex items-center justify-center flex-shrink-0 mt-0.5">
+            <i class="fa-solid fa-shield-halved text-sm"></i>
+          </div>
+          <div>
+            <h2 class="font-bold text-stone-900 text-base">Cuir Véritable Grainé Garanti</h2>
+            <p class="text-xs sm:text-sm text-stone-600">Texture résistante aux rayures et aux intempéries. Ne s'effrite pas avec le temps.</p>
+          </div>
+        </div>
+
+        <div class="flex items-start space-x-3.5">
+          <div class="w-9 h-9 rounded-full bg-brand-100 text-brand-700 flex items-center justify-center flex-shrink-0 mt-0.5">
+            <i class="fa-solid fa-layer-group text-sm"></i>
+          </div>
+          <div>
+            <h2 class="font-bold text-stone-900 text-base">Organisation Intérieure Idéale</h2>
+            <p class="text-xs sm:text-sm text-stone-600">Grand compartiment central, poche zippée sécurisée, et poches pour smartphone et clés.</p>
+          </div>
+        </div>
+
+        <div class="flex items-start space-x-3.5">
+          <div class="w-9 h-9 rounded-full bg-brand-100 text-brand-700 flex items-center justify-center flex-shrink-0 mt-0.5">
+            <i class="fa-solid fa-gem text-sm"></i>
+          </div>
+          <div>
+            <h2 class="font-bold text-stone-900 text-base">Finitions Dorées & Pieds de Protection</h2>
+            <p class="text-xs sm:text-sm text-stone-600">Pieds métalliques polis sous la base pour éviter les frottements lorsque vous posez le sac.</p>
+          </div>
+        </div>
+
+        <div class="flex items-start space-x-3.5">
+          <div class="w-9 h-9 rounded-full bg-brand-100 text-brand-700 flex items-center justify-center flex-shrink-0 mt-0.5">
+            <i class="fa-solid fa-truck-fast text-sm"></i>
+          </div>
+          <div>
+            <h2 class="font-bold text-stone-900 text-base">Livraison 58 Wilayas & Paiement à la réception</h2>
+            <p class="text-xs sm:text-sm text-stone-600">Expédié par Yalidine Express & eDelivery. Vous payez en espèces après vérification.</p>
+          </div>
+        </div>
+
+        <!-- Pricing Card -->
+        <div class="bg-gradient-to-r from-stone-900 to-stone-800 text-white p-5 rounded-2xl flex items-center justify-between shadow-md">
+          <div>
+            <div class="text-xs text-stone-400 line-through">Prix boutique : 11 500 DA</div>
+            <div class="text-2xl sm:text-3xl font-serif font-black text-amber-300">9 000 DA</div>
+          </div>
+          <span class="bg-brand-600 text-white text-xs font-bold px-3 py-1.5 rounded-full shadow">
+            Économie : 2 500 DA
+          </span>
+        </div>
+
+        <a href="#commander" class="block w-full text-center bg-brand-600 hover:bg-brand-700 text-white font-bold py-3.5 rounded-2xl shadow-lg transition transform active:scale-98">
+          RÉSERVER MON SAC KIFFANE MAINTENANT
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Technical Specs Box -->
+  <section class="max-w-4xl mx-auto px-4 py-6">
+    <div class="bg-white rounded-2xl p-6 border border-stone-200 grid grid-cols-2 sm:grid-cols-4 gap-4 text-center">
+      <div class="p-2 border-r border-stone-100 last:border-0">
+        <div class="text-stone-400 text-xs uppercase font-semibold">Matière</div>
+        <div class="font-bold text-stone-900 text-sm mt-1">100% Cuir Véritable</div>
+      </div>
+      <div class="p-2 border-r border-stone-100 last:border-0">
+        <div class="text-stone-400 text-xs uppercase font-semibold">Dimensions</div>
+        <div class="font-bold text-stone-900 text-sm mt-1">37 x 26 x 15 cm</div>
+      </div>
+      <div class="p-2 border-r border-stone-100 last:border-0">
+        <div class="text-stone-400 text-xs uppercase font-semibold">Porté</div>
+        <div class="font-bold text-stone-900 text-sm mt-1">Épaule & Main</div>
+      </div>
+      <div class="p-2">
+        <div class="text-stone-400 text-xs uppercase font-semibold">Finitions</div>
+        <div class="font-bold text-stone-900 text-sm mt-1">Métal Doré Poli</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- COD Order Form Section -->
+  <section id="commander" class="max-w-3xl mx-auto px-4 py-10">
+    <div class="bg-white rounded-3xl shadow-xl border-2 border-brand-600 overflow-hidden">
+      
+      <div class="bg-brand-600 p-6 text-white text-center">
+        <div class="inline-block bg-white/20 text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider mb-2">
+          Paiement 100% à la Livraison (COD)
+        </div>
+        <h2 class="text-2xl sm:text-3xl font-serif font-black">
+          Formulaire de Commande Express
+        </h2>
+        <p class="text-stone-100 text-xs sm:text-sm mt-1">
+          Remplissez vos coordonnées pour réserver votre sac avant épuisement du stock.
+        </p>
+      </div>
+
+      <form id="orderForm" class="p-6 sm:p-8 space-y-6">
+        
+        <!-- Color choice inside form -->
+        <div>
+          <label class="block text-sm font-bold text-stone-800 mb-2">1. Choisissez votre couleur de sac *</label>
+          <div class="grid grid-cols-3 gap-3">
+            <label class="border-2 border-brand-600 bg-brand-50/40 rounded-xl p-3 flex flex-col items-center cursor-pointer transition has-[:checked]:border-brand-600 has-[:checked]:bg-brand-50">
+              <input type="radio" name="selectedColor" value="Noir Profond" checked onchange="updateFormColor('noir', '/assets/sac-noir.jpg')" class="text-brand-600 focus:ring-brand-500" />
+              <span class="font-bold text-xs sm:text-sm mt-1">Noir Profond</span>
+            </label>
+            <label class="border-2 border-stone-200 rounded-xl p-3 flex flex-col items-center cursor-pointer hover:border-stone-300 transition has-[:checked]:border-brand-600 has-[:checked]:bg-brand-50">
+              <input type="radio" name="selectedColor" value="Beige Taupe" onchange="updateFormColor('beige', '/assets/sac-beige.jpg')" class="text-brand-600 focus:ring-brand-500" />
+              <span class="font-bold text-xs sm:text-sm mt-1">Beige Taupe</span>
+            </label>
+            <label class="border-2 border-stone-200 rounded-xl p-3 flex flex-col items-center cursor-pointer hover:border-stone-300 transition has-[:checked]:border-brand-600 has-[:checked]:bg-brand-50">
+              <input type="radio" name="selectedColor" value="Blanc Crème" onchange="updateFormColor('creme', '/assets/sac-creme.jpg')" class="text-brand-600 focus:ring-brand-500" />
+              <span class="font-bold text-xs sm:text-sm mt-1">Blanc Crème</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- Customer Information -->
+        <div class="space-y-4">
+          <div>
+            <label class="block text-sm font-bold text-stone-800 mb-1">2. Nom et Prénom *</label>
+            <div class="relative">
+              <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-stone-400"><i class="fa-solid fa-user"></i></span>
+              <input type="text" id="fullName" required placeholder="Ex: Amina Khelifi"
+                class="w-full pl-10 pr-4 py-3 rounded-xl border border-stone-300 focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition" />
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-sm font-bold text-stone-800 mb-1">3. Numéro de Téléphone *</label>
+            <div class="relative">
+              <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-stone-400"><i class="fa-solid fa-phone"></i></span>
+              <input type="tel" id="phone" required placeholder="05 / 06 / 07 XX XX XX XX"
+                class="w-full pl-10 pr-4 py-3 rounded-xl border border-stone-300 focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition" />
+            </div>
+            <p class="text-[11px] text-stone-500 mt-1">Notre équipe vous appellera sur ce numéro pour confirmer l'expédition.</p>
+          </div>
+
+          <!-- Wilaya & Commune Selection -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-sm font-bold text-stone-800 mb-1">4. Wilaya de livraison *</label>
+              <select id="wilayaSelect" required
+                class="w-full px-3 py-3 rounded-xl border border-stone-300 focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none bg-white font-medium">
+                <option value="">Sélectionnez votre Wilaya</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-sm font-bold text-stone-800 mb-1">5. Commune / Ville *</label>
+              <input type="text" id="commune" required placeholder="Ex: Sidi Yahia / Alger Centre"
+                class="w-full px-4 py-3 rounded-xl border border-stone-300 focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition" />
+            </div>
+          </div>
+
+          <!-- Delivery Mode (Home vs Stop Desk) -->
+          <div>
+            <label class="block text-sm font-bold text-stone-800 mb-2">6. Mode de Réception *</label>
+            <div class="grid grid-cols-2 gap-3">
+              <label class="border-2 border-brand-600 bg-brand-50/40 rounded-xl p-3 flex flex-col items-center cursor-pointer transition has-[:checked]:border-brand-600 has-[:checked]:bg-brand-50">
+                <input type="radio" name="deliveryType" value="home" checked class="text-brand-600 focus:ring-brand-500" />
+                <span class="font-bold text-sm mt-1">Livraison à Domicile</span>
+                <span class="text-xs text-stone-500" id="homePriceLabel">+500 DA</span>
+              </label>
+              <label class="border-2 border-stone-200 rounded-xl p-3 flex flex-col items-center cursor-pointer hover:border-stone-300 transition has-[:checked]:border-brand-600 has-[:checked]:bg-brand-50">
+                <input type="radio" name="deliveryType" value="desk" class="text-brand-600 focus:ring-brand-500" />
+                <span class="font-bold text-sm mt-1">Bureau Yalidine (Stop Desk)</span>
+                <span class="text-xs text-stone-500" id="deskPriceLabel">+300 DA</span>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <!-- ORDER BUMP : Portefeuille Cuir Assorti -->
+        <div class="border-2 border-dashed border-amber-500 bg-amber-50/80 rounded-2xl p-4 sm:p-5 relative transition">
+          <div class="flex items-start space-x-3.5">
+            <input type="checkbox" id="bumpCheckbox" class="mt-1.5 w-5 h-5 text-brand-600 rounded border-stone-300 focus:ring-brand-500 cursor-pointer flex-shrink-0" />
+            <div class="flex-1">
+              <div class="flex items-center justify-between flex-wrap gap-1">
+                <span class="bg-amber-600 text-white font-extrabold text-[10px] px-2 py-0.5 rounded uppercase tracking-wider">
+                  ⚡ Offre Exclusive Immédiate (-44%)
+                </span>
+                <span class="font-black text-brand-700 text-sm sm:text-base">
+                  +2 500 DA <span class="line-through text-stone-400 text-xs font-normal">4 500 DA</span>
+                </span>
+              </div>
+              
+              <div class="flex items-center space-x-3 mt-2">
+                <img src="/assets/portefeuille.jpg" alt="Portefeuille en cuir véritable" class="w-16 h-16 object-cover rounded-xl border border-amber-300 shadow-sm flex-shrink-0" />
+                <div>
+                  <h3 class="font-bold text-stone-900 text-sm sm:text-base">
+                    OUI ! Ajoutez le Portefeuille Assorti en Cuir Véritable
+                  </h3>
+                  <p class="text-xs text-stone-600 mt-0.5 leading-relaxed">
+                    Compagnon élégant avec zip doré, multiples fentes cartes et compartiment billets/monnaie. Assorti à votre sac.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Order Summary & Total -->
+        <div class="bg-stone-100 rounded-2xl p-5 space-y-2.5 text-sm">
+          <div class="flex justify-between text-stone-700">
+            <span>Sac Cabas Laila Kiffane (100% Cuir) :</span>
+            <span class="font-bold" id="sumProduct">9 000 DA</span>
+          </div>
+          <div class="flex justify-between text-stone-700" id="sumBumpRow" style="display: none;">
+            <span>Portefeuille en Cuir Assorti (Order Bump) :</span>
+            <span class="font-bold text-brand-700">+2 500 DA</span>
+          </div>
+          <div class="flex justify-between text-stone-700">
+            <span>Frais de Livraison (<span id="sumDeliveryType">Domicile</span>) :</span>
+            <span class="font-bold" id="sumDelivery">500 DA</span>
+          </div>
+          <div class="border-t border-stone-300 pt-3 flex justify-between text-lg sm:text-xl font-serif font-black text-stone-900">
+            <span>TOTAL À PAYER À LA LIVRAISON :</span>
+            <span class="text-brand-700 font-sans" id="sumTotal">9 500 DA</span>
+          </div>
+        </div>
+
+        <!-- Submit Button -->
+        <button type="submit" id="submitBtn"
+          class="w-full bg-brand-600 hover:bg-brand-700 text-white font-bold text-lg py-4 rounded-2xl shadow-xl hover:shadow-2xl transition transform active:scale-98 flex items-center justify-center space-x-2">
+          <span>VALIDER MA COMMANDE (PAIEMENT À LA RÉCEPTION)</span>
+          <i class="fa-solid fa-arrow-right text-lg"></i>
+        </button>
+
+        <div class="text-center text-xs text-stone-500 space-y-1 pt-2">
+          <p><i class="fa-solid fa-lock text-green-600 mr-1"></i> Vos informations sont protégées et 100% confidentielles.</p>
+          <p><i class="fa-solid fa-truck text-stone-600 mr-1"></i> Expédition rapide 58 Wilayas sous 24-48h avec Yalidine / eDelivery.</p>
+        </div>
+      </form>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-stone-900 text-stone-400 py-10 text-xs border-t border-stone-800">
+    <div class="max-w-4xl mx-auto px-4 text-center space-y-3">
+      <div class="text-lg font-serif font-black tracking-widest text-white">KIFFANE.COM</div>
+      <p>Maroquinerie d'exception en Cuir Véritable pour Femmes Actives.</p>
+      <p class="text-stone-500">Service Client : <strong>+213 772 84 79 46</strong> | Sourcing Opal'o Logistique | Livraison Yalidine & eDelivery Express</p>
+      <p class="pt-4 text-stone-600">© 2026 Kiffane.com - Tous droits réservés.</p>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="/js/wilayas.js"></script>
+  <script>
+    const MAIN_PRICE = 9000;
+    const BUMP_PRICE = 2500;
+    let selectedDeliveryFee = 500;
+    let currentColor = "Noir Profond";
+
+    function selectColor(colorKey, imgSrc, colorName) {
+      document.getElementById("mainProductImg").src = imgSrc;
+      currentColor = colorName;
+      
+      const radio = document.querySelector(`input[name="selectedColor"][value="${colorName}"]`);
+      if (radio) radio.checked = true;
+
+      document.querySelectorAll('.color-btn').forEach(btn => {
+        btn.classList.remove('border-brand-600');
+        btn.classList.add('border-stone-200');
+      });
+      event.currentTarget.classList.add('border-brand-600');
+      event.currentTarget.classList.remove('border-stone-200');
+    }
+
+    function updateFormColor(colorKey, imgSrc) {
+      document.getElementById("mainProductImg").src = imgSrc;
+      const checkedRadio = document.querySelector('input[name="selectedColor"]:checked');
+      if (checkedRadio) currentColor = checkedRadio.value;
+    }
+
+    // Populate Wilayas Dropdown
+    const wilayaSelect = document.getElementById("wilayaSelect");
+    WILAYAS.forEach(w => {
+      const opt = document.createElement("option");
+      opt.value = w.name;
+      opt.textContent = w.name;
+      opt.dataset.home = w.homePrice;
+      opt.dataset.desk = w.deskPrice;
+      wilayaSelect.appendChild(opt);
+    });
+
+    // Update Prices
+    function updatePrices() {
+      const selectedOption = wilayaSelect.options[wilayaSelect.selectedIndex];
+      const isDesk = document.querySelector('input[name="deliveryType"]:checked').value === "desk";
+      
+      if (selectedOption && selectedOption.dataset.home) {
+        const homeP = parseInt(selectedOption.dataset.home, 10);
+        const deskP = parseInt(selectedOption.dataset.desk, 10);
+        document.getElementById("homePriceLabel").textContent = `+${homeP} DA`;
+        document.getElementById("deskPriceLabel").textContent = `+${deskP} DA`;
+        selectedDeliveryFee = isDesk ? deskP : homeP;
+      } else {
+        selectedDeliveryFee = isDesk ? 300 : 500;
+      }
+
+      const hasBump = document.getElementById("bumpCheckbox").checked;
+      document.getElementById("sumBumpRow").style.display = hasBump ? "flex" : "none";
+      document.getElementById("sumDeliveryType").textContent = isDesk ? "Stop Desk" : "Domicile";
+      document.getElementById("sumDelivery").textContent = `${selectedDeliveryFee} DA`;
+
+      const total = MAIN_PRICE + (hasBump ? BUMP_PRICE : 0) + selectedDeliveryFee;
+      document.getElementById("sumTotal").textContent = `${total.toLocaleString()} DA`;
+    }
+
+    wilayaSelect.addEventListener("change", updatePrices);
+    document.querySelectorAll('input[name="deliveryType"]').forEach(r => r.addEventListener("change", updatePrices));
+    document.getElementById("bumpCheckbox").addEventListener("change", updatePrices);
+
+    // Form Submission
+    document.getElementById("orderForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const submitBtn = document.getElementById("submitBtn");
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = `<i class="fa-solid fa-spinner fa-spin mr-2"></i> Enregistrement en cours...`;
+
+      const payload = {
+        fullName: document.getElementById("fullName").value.trim(),
+        phone: document.getElementById("phone").value.trim(),
+        wilaya: wilayaSelect.value,
+        commune: document.getElementById("commune").value.trim(),
+        deliveryType: document.querySelector('input[name="deliveryType"]:checked').value,
+        color: document.querySelector('input[name="selectedColor"]:checked')?.value || currentColor,
+        productName: "Sac Cabas Laila Kiffane (Cuir Véritable)",
+        productPrice: MAIN_PRICE,
+        productQty: 1,
+        includeBump: document.getElementById("bumpCheckbox").checked,
+        bumpPrice: BUMP_PRICE,
+      };
+
+      try {
+        const res = await fetch("/api/submit-order", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload)
+        });
+        const data = await res.json();
+
+        if (data.success) {
+          sessionStorage.setItem("kiffane_order", JSON.stringify(data.order));
+          window.location.href = "/upsell.html";
+        } else {
+          alert("Erreur : " + (data.error || "Impossible de valider la commande."));
+          submitBtn.disabled = false;
+          submitBtn.innerHTML = `<span>VALIDER MA COMMANDE (PAIEMENT À LA RÉCEPTION)</span> <i class="fa-solid fa-arrow-right text-lg"></i>`;
+        }
+      } catch (err) {
+        console.error(err);
+        alert("Erreur de connexion avec le serveur.");
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = `<span>VALIDER MA COMMANDE (PAIEMENT À LA RÉCEPTION)</span> <i class="fa-solid fa-arrow-right text-lg"></i>`;
+      }
+    });
+  </script>
+</body>
+</html>

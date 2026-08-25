@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Offre Spéciale Unique (UPSELL) | Kiffane.com</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: { 50: '#fdf8f6', 100: '#f2e8e5', 500: '#c2785c', 600: '#a35538', 700: '#843d23' }
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="bg-[#faf8f5] text-stone-800 antialiased min-h-screen flex flex-col justify-between">
+
+  <!-- Attention Top Bar -->
+  <div class="bg-stone-900 text-amber-300 text-xs sm:text-sm py-2.5 px-4 text-center font-bold tracking-wide">
+    ⚠️ ATTENDEZ ! VOTRE COMMANDE EST EN COURS — OFFRE POST-ACHAT EXCLUSIVE
+  </div>
+
+  <main class="max-w-2xl mx-auto px-4 py-8 sm:py-12 flex-1">
+    <div class="bg-white rounded-3xl shadow-xl border border-stone-200 p-6 sm:p-10 text-center">
+      
+      <!-- Progress Bar -->
+      <div class="w-full bg-stone-200 rounded-full h-2 mb-6">
+        <div class="bg-brand-600 h-2 rounded-full w-2/3"></div>
+      </div>
+
+      <span class="bg-amber-100 text-amber-900 text-xs font-black px-3.5 py-1 rounded-full uppercase tracking-wider">
+        Étape 2 sur 3 : Offre Privilège
+      </span>
+
+      <h1 class="text-2xl sm:text-3xl font-serif font-black text-stone-900 mt-4 leading-tight">
+        Préservez l'Éclat de Votre Sac en Cuir Pour Les 5 Prochaines Années !
+      </h1>
+
+      <p class="text-stone-600 mt-2 text-sm sm:text-base max-w-lg mx-auto leading-relaxed">
+        Le cuir véritable vit et respire. Ajoutez notre <strong>Kit de Soin & Nutrition Kiffane</strong> (Baume nourrissant naturel + Chiffon microfibre de lustrage) avec <strong>0 DA de livraison supplémentaire</strong> !
+      </p>
+
+      <!-- Upsell Product Card -->
+      <div class="my-6 bg-gradient-to-b from-brand-50 to-stone-50 border-2 border-brand-500/50 rounded-2xl p-6 text-left sm:flex sm:items-center sm:space-x-6">
+        <img src="/assets/kit-soin.jpg" alt="Kit d'entretien pour cuir véritable Kiffane" class="w-40 h-40 sm:w-44 sm:h-44 object-cover rounded-2xl mx-auto sm:mx-0 shadow-md border border-stone-200 flex-shrink-0 mb-4 sm:mb-0" />
+        
+        <div class="space-y-2 flex-1">
+          <div class="inline-block bg-red-600 text-white text-[10px] font-black px-2.5 py-0.5 rounded uppercase">
+            -52% DE RÉDUCTION
+          </div>
+          <h3 class="font-serif font-bold text-stone-900 text-lg sm:text-xl">Kit Soin & Baume Nourrissant Cuir</h3>
+          <ul class="text-xs text-stone-600 space-y-1">
+            <li><i class="fa-solid fa-check text-green-600 mr-1.5"></i> Nourrit, imperméabilise et protège contre les tâches</li>
+            <li><i class="fa-solid fa-check text-green-600 mr-1.5"></i> Inclus : Crème naturelle + Chiffon microfibre doux</li>
+            <li><i class="fa-solid fa-check text-green-600 mr-1.5"></i> Frais de port additionnels : <strong>0 DA (Offerts)</strong></li>
+          </ul>
+          <div class="pt-2">
+            <span class="text-xs text-stone-400 line-through">2 500 DA</span>
+            <div class="text-2xl font-black text-brand-700">1 200 DA SEULEMENT</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Actions -->
+      <div class="space-y-3">
+        <button id="acceptUpsell"
+          class="w-full bg-brand-600 hover:bg-brand-700 text-white font-bold text-base sm:text-lg py-4 rounded-2xl shadow-xl hover:shadow-2xl transition transform active:scale-98 flex items-center justify-center space-x-2">
+          <i class="fa-solid fa-cart-plus text-xl"></i>
+          <span>OUI ! AJOUTER LE KIT À MON COLIS (+1 200 DA)</span>
+        </button>
+
+        <button id="declineUpsell"
+          class="w-full text-stone-400 hover:text-stone-600 font-semibold text-xs sm:text-sm py-2 transition underline">
+          Non merci, je ne souhaite pas protéger mon sac et je continue
+        </button>
+      </div>
+
+    </div>
+  </main>
+
+  <footer class="bg-stone-900 text-stone-400 text-center py-5 text-xs">
+    © 2026 Kiffane.com | Service Client : +213 772 84 79 46 | Paiement à la réception (COD)
+  </footer>
+
+  <script>
+    const order = JSON.parse(sessionStorage.getItem("kiffane_order") || "{}");
+
+    document.getElementById("acceptUpsell").addEventListener("click", () => {
+      if (!order.cart) order.cart = {};
+      order.cart.upsell = { name: "Kit Soin & Baume Nourrissant Cuir", price: 1200 };
+      sessionStorage.setItem("kiffane_order", JSON.stringify(order));
+      window.location.href = "/merci.html";
+    });
+
+    document.getElementById("declineUpsell").addEventListener("click", () => {
+      window.location.href = "/downsell.html";
+    });
+  </script>
+</body>
+</html>
