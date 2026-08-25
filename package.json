@@ -1,6 +1,10 @@
 {
-  "name": "kiffane-com",
-  "private": true,
+  "name": "kiffane",
   "version": "1.0.0",
-  "description": "Kiffane.com - Tunnel E-commerce COD sur Cloudflare Pages"
+  "private": true,
+  "description": "Kiffane.com - E-commerce COD sur Cloudflare Workers & Assets",
+  "scripts": {
+    "deploy": "wrangler deploy",
+    "preview": "wrangler dev"
+  }
 }
