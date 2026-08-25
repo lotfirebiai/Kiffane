@@ -1,24 +1,23 @@
 /**
  * Cloudflare Worker pour Kiffane.com
- * Gère le routage API backend (/api/submit-order) et la distribution des fichiers statiques (ASSETS)
+ * Routage API backend : Réception des commandes COD + Envoi instantané Telegram & Google Sheets
  */
 export default {
   async fetch(request, env, ctx) {
     const url = new URL(request.url);
 
-    // Headers CORS pour autoriser tout appel
     const corsHeaders = {
       "Access-Control-Allow-Origin": "*",
       "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
       "Access-Control-Allow-Headers": "Content-Type",
     };
 
-    // 1. Gestion Pré-vol CORS pour l'API
+    // 1. Gestion Pré-vol CORS
     if (request.method === "OPTIONS") {
       return new Response(null, { headers: corsHeaders });
     }
 
-    // 2. Route API : /api/submit-order (Réception commande COD)
+    // 2. Route API : /api/submit-order
     if (url.pathname === "/api/submit-order") {
       if (request.method !== "POST") {
         return new Response(
@@ -46,7 +45,7 @@ export default {
           downsell = null,
         } = body;
 
-        // Validation minimale
+        // Validation
         if (!fullName || !phone || !wilaya) {
           return new Response(
             JSON.stringify({ error: "Veuillez renseigner votre nom, numéro de téléphone et wilaya." }),
@@ -54,20 +53,20 @@ export default {
           );
         }
 
-        // Génération de la référence unique de commande
-        const orderId = "KFN-" + Math.floor(100000 + Math.random() * 900000);
+        const orderId = body.orderId || ("KFN-" + Math.floor(100000 + Math.random() * 900000));
         const timestamp = new Date().toISOString();
 
         const orderRecord = {
           orderId,
           timestamp,
+          dateFormatted: new Date().toLocaleString("fr-FR", { timeZone: "Africa/Algiers" }),
           customer: {
             fullName,
             phone,
             wilaya,
             commune: commune || "",
             address: address || "",
-            deliveryType,
+            deliveryType: deliveryType === "desk" ? "Stop Desk (Bureau Yalidine)" : "À Domicile",
           },
           cart: {
             productName,
@@ -75,58 +74,79 @@ export default {
             productPrice,
             productQty,
             includeBump,
+            bumpName: includeBump ? "Portefeuille en Cuir Assorti (+2 500 DA)" : "Aucun",
             bumpPrice: includeBump ? bumpPrice : 0,
             upsell,
             downsell,
           },
-          status: "PENDING_CONFIRMATION",
+          status: "À CONFIRMER (Appel téléphonique)",
         };
 
-        // Notification Telegram (si configuré dans Cloudflare Environment Variables)
-        if (env && env.TELEGRAM_BOT_TOKEN && env.TELEGRAM_CHAT_ID) {
-          const message = `🛍️ *NOUVELLE COMMANDE KIFFANE #${orderId}*\n\n` +
-            `👤 *Client :* ${fullName}\n` +
-            `📞 *Téléphone :* ${phone}\n` +
-            `📍 *Destination :* ${wilaya} (${deliveryType === "desk" ? "Stop Desk Yalidine" : "À Domicile"})\n` +
-            `👜 *Sac :* ${productName} - *${color}*\n` +
-            `👛 *Portefeuille (Order Bump) :* ${includeBump ? "OUI (+2500 DA)" : "NON"}\n` +
-            `⏰ *Date :* ${new Date().toLocaleString("fr-FR", { timeZone: "Africa/Algiers" })}`;
+        const backgroundTasks = [];
 
-          try {
-            ctx.waitUntil(
-              fetch(`https://api.telegram.org/bot${env.TELEGRAM_BOT_TOKEN}/sendMessage`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                  chat_id: env.TELEGRAM_CHAT_ID,
-                  text: message,
-                  parse_mode: "Markdown",
-                }),
-              })
-            );
-          } catch (telegramErr) {
-            console.error("Erreur Telegram:", telegramErr);
-          }
+        // 📲 1. Notification Telegram en direct
+        if (env && env.TELEGRAM_BOT_TOKEN && env.TELEGRAM_CHAT_ID) {
+          const telegramMessage = 
+            `🛍️ *NOUVELLE COMMANDE KIFFANE #${orderId}*\n` +
+            `━━━━━━━━━━━━━━━━━━━━\n` +
+            `👤 *Client :* ${fullName}\n` +
+            `📞 *Téléphone :* [${phone}](tel:${phone})\n` +
+            `📍 *Destination :* ${wilaya} - ${commune || ''}\n` +
+            `🚚 *Mode :* ${deliveryType === "desk" ? "Bureau Yalidine (Stop Desk)" : "Livraison Domicile"}\n` +
+            `━━━━━━━━━━━━━━━━━━━━\n` +
+            `👜 *Sac :* Cabas Laila (${color}) - 9 000 DA\n` +
+            `👛 *Portefeuille (Bump) :* ${includeBump ? "✅ OUI (+2 500 DA)" : "❌ NON"}\n` +
+            `━━━━━━━━━━━━━━━━━━━━\n` +
+            `⏰ *Date :* ${orderRecord.dateFormatted}`;
+
+          backgroundTasks.push(
+            fetch(`https://api.telegram.org/bot${env.TELEGRAM_BOT_TOKEN}/sendMessage`, {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                chat_id: env.TELEGRAM_CHAT_ID,
+                text: telegramMessage,
+                parse_mode: "Markdown",
+                disable_web_page_preview: true,
+              }),
+            }).catch(e => console.error("Erreur Telegram:", e))
+          );
+        }
+
+        // 📊 2. Synchronisation Google Sheets
+        if (env && env.GOOGLE_SHEETS_WEBHOOK_URL) {
+          backgroundTasks.push(
+            fetch(env.GOOGLE_SHEETS_WEBHOOK_URL, {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify(orderRecord),
+            }).catch(e => console.error("Erreur Google Sheets:", e))
+          );
+        }
+
+        // Exécution en arrière-plan sans ralentir le client
+        if (ctx && ctx.waitUntil && backgroundTasks.length > 0) {
+          ctx.waitUntil(Promise.allSettled(backgroundTasks));
         }
 
         return new Response(
           JSON.stringify({
             success: true,
             orderId,
-            message: "Commande Kiffane enregistrée avec succès",
+            message: "Commande enregistrée avec succès",
             order: orderRecord,
           }),
           { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } }
         );
       } catch (err) {
         return new Response(
-          JSON.stringify({ error: err.message || "Erreur interne du serveur" }),
+          JSON.stringify({ error: err.message || "Erreur interne" }),
           { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
         );
       }
     }
 
-    // 3. Distribution des fichiers statiques du site (HTML, CSS, Images, JS) via ASSETS
+    // 3. Distribution des fichiers statiques (Landing, Images, Scripts)
     if (env && env.ASSETS) {
       return env.ASSETS.fetch(request);
     }
