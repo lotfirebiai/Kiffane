@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Offre Spéciale Unique (UPSELL) | Kiffane.com</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+</head>
+<body class="bg-gray-50 text-gray-800 antialiased min-h-screen flex flex-col justify-between">
+
+  <!-- Attention banner -->
+  <div class="bg-red-600 text-white text-xs sm:text-sm py-2.5 px-4 text-center font-bold">
+    ⚠️ ATTENDEZ ! VOTRE COMMANDE N'EST PAS ENCORE COMPLÈTE — OFFRE UNIQUE
+  </div>
+
+  <main class="max-w-2xl mx-auto px-4 py-8 flex-1">
+    <div class="bg-white rounded-3xl shadow-xl border border-gray-100 p-6 sm:p-8 text-center">
+      
+      <!-- Progress Bar -->
+      <div class="w-full bg-gray-200 rounded-full h-2.5 mb-6">
+        <div class="bg-orange-500 h-2.5 rounded-full w-3/4"></div>
+      </div>
+
+      <span class="bg-orange-100 text-orange-700 text-xs font-black px-3 py-1 rounded-full uppercase tracking-wider">
+        Étape 2 sur 3 : Offre Post-Achat
+      </span>
+
+      <h1 class="text-2xl sm:text-3xl font-black text-gray-900 mt-4 leading-snug">
+        Ajoutez Une 2ème Unité à <span class="text-orange-600">-60% DE RÉDUCTION</span> Pour Un Proche !
+      </h1>
+
+      <p class="text-gray-600 mt-2 text-sm sm:text-base">
+        Comme votre commande est déjà en cours de préparation dans notre entrepôt, vous bénéficiez de <strong>0 DZD de frais de livraison supplémentaires</strong> sur cet article.
+      </p>
+
+      <!-- Upsell Product Box -->
+      <div class="my-6 bg-gradient-to-b from-orange-50/70 to-amber-50/30 border-2 border-orange-300 rounded-2xl p-6">
+        <div class="w-32 h-32 mx-auto bg-orange-100 rounded-2xl flex items-center justify-center border border-orange-200 mb-4">
+          <i class="fa-solid fa-gift text-5xl text-orange-500"></i>
+        </div>
+        <div class="space-y-1">
+          <div class="text-xs text-gray-500 line-through">Prix standard : 3 900 DZD</div>
+          <div class="text-3xl font-black text-orange-600">SEULEMENT 1 500 DZD</div>
+          <div class="text-xs text-green-700 font-bold bg-green-100 inline-block px-3 py-1 rounded-full mt-2">
+            Frais de livraison additionnels : 0 DZD (Offerts)
+          </div>
+        </div>
+      </div>
+
+      <!-- Actions -->
+      <div class="space-y-3">
+        <button id="acceptUpsell"
+          class="w-full bg-green-600 hover:bg-green-700 text-white font-black text-lg py-4 rounded-2xl shadow-lg hover:shadow-xl transition transform active:scale-98 flex items-center justify-center space-x-2">
+          <i class="fa-solid fa-check-circle text-xl"></i>
+          <span>OUI ! AJOUTER À MON COLIS (+1 500 DZD)</span>
+        </button>
+
+        <button id="declineUpsell"
+          class="w-full text-gray-400 hover:text-gray-600 font-semibold text-xs sm:text-sm py-2 transition underline">
+          Non merci, je refuse cette offre exceptionnelle et je continue
+        </button>
+      </div>
+
+    </div>
+  </main>
+
+  <footer class="bg-gray-100 text-gray-500 text-center py-4 text-xs">
+    © 2026 Kiffane.com | Paiement Sécurisé à la Livraison (COD)
+  </footer>
+
+  <script>
+    const order = JSON.parse(sessionStorage.getItem("kiffane_order") || "{}");
+
+    document.getElementById("acceptUpsell").addEventListener("click", () => {
+      if (order.cart) {
+        order.cart.upsell = { name: "2ème unité -60%", price: 1500 };
+      }
+      sessionStorage.setItem("kiffane_order", JSON.stringify(order));
+      window.location.href = "/merci.html";
+    });
+
+    document.getElementById("declineUpsell").addEventListener("click", () => {
+      // Si refus de l'upsell, redirection vers le Downsell
+      window.location.href = "/downsell.html";
+    });
+  </script>
+</body>
+</html>

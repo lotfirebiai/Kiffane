@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="fr" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Kiffane.com | Offre Exclusive</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: { 50: '#fff7ed', 500: '#ea580c', 600: '#c2410c', 700: '#9a3412' }
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="bg-gray-50 text-gray-800 antialiased">
+
+  <!-- Top Announcement Bar -->
+  <div class="bg-brand-600 text-white text-xs sm:text-sm py-2 px-4 text-center font-medium shadow-sm">
+    🔥 <strong>Offre Spéciale :</strong> -40% aujourd'hui + Paiement à la livraison dans 58 Wilayas !
+  </div>
+
+  <!-- Header -->
+  <header class="bg-white border-b border-gray-100 sticky top-0 z-40 shadow-sm">
+    <div class="max-w-4xl mx-auto px-4 h-16 flex items-center justify-between">
+      <div class="text-2xl font-black tracking-tight text-gray-900">
+        KIFFANE<span class="text-brand-500">.COM</span>
+      </div>
+      <a href="#commander" class="bg-brand-500 hover:bg-brand-600 text-white px-4 py-2 rounded-full font-bold text-sm shadow transition">
+        Commander <i class="fa-solid fa-arrow-down ml-1"></i>
+      </a>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="max-w-4xl mx-auto px-4 py-8 sm:py-12">
+    <div class="text-center mb-8">
+      <span class="bg-orange-100 text-brand-700 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide">
+        Produit N°1 des Ventes en Algérie ⭐⭐⭐⭐⭐
+      </span>
+      <h1 class="text-3xl sm:text-4xl md:text-5xl font-extrabold text-gray-900 mt-4 leading-tight">
+        La Solution Ultime Pour Votre Confort Quotidien
+      </h1>
+      <p class="text-gray-600 mt-3 text-base sm:text-lg max-w-2xl mx-auto">
+        Découvrez notre produit phare sourcé avec soin. Qualité supérieure garantie et livraison express à domicile ou en point relais.
+      </p>
+    </div>
+
+    <!-- Product Showcase Gallery & Highlights -->
+    <div class="grid md:grid-cols-2 gap-8 items-center bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+      <!-- Media placeholder -->
+      <div class="relative bg-gradient-to-tr from-orange-100 to-amber-50 rounded-xl overflow-hidden aspect-square flex items-center justify-center border border-orange-200">
+        <div class="text-center p-6">
+          <i class="fa-solid fa-box-open text-6xl text-brand-500 mb-4 animate-bounce"></i>
+          <p class="font-bold text-gray-800 text-lg">Visuel Produit Principal</p>
+          <p class="text-xs text-gray-500 mt-1">Image / Vidéo démonstrative haute résolution</p>
+        </div>
+        <div class="absolute top-3 left-3 bg-red-600 text-white font-black text-xs px-2.5 py-1 rounded-md shadow">
+          -40% RÉDUCTION
+        </div>
+      </div>
+
+      <!-- Key Benefits List -->
+      <div class="space-y-4">
+        <div class="flex items-start space-x-3">
+          <div class="bg-green-100 text-green-700 p-2 rounded-lg"><i class="fa-solid fa-check text-lg"></i></div>
+          <div>
+            <h2 class="font-bold text-gray-900">Efficacité Immédiate & Durable</h2>
+            <p class="text-sm text-gray-600">Conçu selon les normes les plus strictes avec des matériaux haut de gamme.</p>
+          </div>
+        </div>
+        <div class="flex items-start space-x-3">
+          <div class="bg-green-100 text-green-700 p-2 rounded-lg"><i class="fa-solid fa-truck-fast text-lg"></i></div>
+          <div>
+            <h2 class="font-bold text-gray-900">Livraison 58 Wilayas sous 24-48h</h2>
+            <p class="text-sm text-gray-600">Expédition sécurisée avec Yalidine Express & eDelivery Express.</p>
+          </div>
+        </div>
+        <div class="flex items-start space-x-3">
+          <div class="bg-green-100 text-green-700 p-2 rounded-lg"><i class="fa-solid fa-hand-holding-dollar text-lg"></i></div>
+          <div>
+            <h2 class="font-bold text-gray-900">Paiement 100% à la Livraison (COD)</h2>
+            <p class="text-sm text-gray-600">Payez en espèces uniquement après vérification de votre colis.</p>
+          </div>
+        </div>
+
+        <!-- Pricing Badge -->
+        <div class="bg-orange-50 border border-orange-200 p-4 rounded-xl flex items-center justify-between mt-6">
+          <div>
+            <span class="text-xs text-gray-500 line-through">6 500 DZD</span>
+            <div class="text-2xl sm:text-3xl font-extrabold text-brand-600" id="displayMainPrice">3 900 DZD</div>
+          </div>
+          <span class="bg-green-600 text-white text-xs font-bold px-3 py-1.5 rounded-full">
+            Économisez 2 600 DZD
+          </span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- COD Order Section -->
+  <section id="commander" class="max-w-3xl mx-auto px-4 py-10">
+    <div class="bg-white rounded-3xl shadow-xl border-2 border-brand-500 overflow-hidden">
+      <div class="bg-brand-500 p-5 text-white text-center">
+        <h2 class="text-2xl font-black uppercase tracking-wide">
+          🛒 Formulaire de Commande Express
+        </h2>
+        <p class="text-orange-100 text-sm mt-1">Remplissez vos informations ci-dessous pour réserver votre colis</p>
+      </div>
+
+      <form id="orderForm" class="p-6 sm:p-8 space-y-6">
+        <!-- Customer Info -->
+        <div class="space-y-4">
+          <div>
+            <label class="block text-sm font-bold text-gray-700 mb-1">Nom et Prénom *</label>
+            <div class="relative">
+              <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400"><i class="fa-solid fa-user"></i></span>
+              <input type="text" id="fullName" required placeholder="Ex: Mohamed Benali"
+                class="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition" />
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-sm font-bold text-gray-700 mb-1">Numéro de Téléphone *</label>
+            <div class="relative">
+              <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400"><i class="fa-solid fa-phone"></i></span>
+              <input type="tel" id="phone" required placeholder="05 / 06 / 07 XX XX XX"
+                class="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition" />
+            </div>
+            <p class="text-xs text-gray-500 mt-1">Notre équipe vous appellera sur ce numéro pour confirmer l'expédition.</p>
+          </div>
+
+          <!-- Wilaya & Commune Selection -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-sm font-bold text-gray-700 mb-1">Wilaya *</label>
+              <select id="wilayaSelect" required
+                class="w-full px-3 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none bg-white font-medium">
+                <option value="">Sélectionnez votre Wilaya</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-sm font-bold text-gray-700 mb-1">Commune / Ville *</label>
+              <input type="text" id="commune" required placeholder="Ex: Bab Ezzouar"
+                class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition" />
+            </div>
+          </div>
+
+          <!-- Delivery Mode (Home vs Stop Desk) -->
+          <div>
+            <label class="block text-sm font-bold text-gray-700 mb-2">Mode de Réception *</label>
+            <div class="grid grid-cols-2 gap-3">
+              <label class="border-2 border-brand-500 bg-orange-50/50 rounded-xl p-3 flex flex-col items-center cursor-pointer transition has-[:checked]:border-brand-500 has-[:checked]:bg-orange-50">
+                <input type="radio" name="deliveryType" value="home" checked class="text-brand-600 focus:ring-brand-500" />
+                <span class="font-bold text-sm mt-1">À Domicile</span>
+                <span class="text-xs text-gray-500" id="homePriceLabel">+500 DZD</span>
+              </label>
+              <label class="border-2 border-gray-200 rounded-xl p-3 flex flex-col items-center cursor-pointer hover:border-gray-300 transition has-[:checked]:border-brand-500 has-[:checked]:bg-orange-50">
+                <input type="radio" name="deliveryType" value="desk" class="text-brand-600 focus:ring-brand-500" />
+                <span class="font-bold text-sm mt-1">Bureau / Stop Desk</span>
+                <span class="text-xs text-gray-500" id="deskPriceLabel">+300 DZD</span>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <!-- ORDER BUMP (Offre Complémentaire dans le formulaire) -->
+        <div class="border-2 border-dashed border-amber-500 bg-amber-50/60 rounded-2xl p-4 sm:p-5 relative transition">
+          <div class="flex items-start space-x-3">
+            <input type="checkbox" id="bumpCheckbox" class="mt-1 w-5 h-5 text-brand-600 rounded border-gray-300 focus:ring-brand-500 cursor-pointer" />
+            <div class="flex-1">
+              <div class="flex items-center justify-between">
+                <span class="bg-amber-500 text-white font-extrabold text-xs px-2 py-0.5 rounded uppercase">
+                  ⚡ Offre Exclusive Immédiate
+                </span>
+                <span class="font-black text-brand-600 text-sm">+990 DZD <span class="line-through text-gray-400 text-xs font-normal">2 000 DZD</span></span>
+              </div>
+              <h3 class="font-bold text-gray-900 text-sm sm:text-base mt-1">
+                OUI ! Ajoutez le Pack Entretien & Garantie Casse 1 An
+              </h3>
+              <p class="text-xs text-gray-600 mt-1 leading-relaxed">
+                Protégez votre investissement : remplacement à neuf garanti sans frais pendant 12 mois + kit d'accessoires de rechange.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Order Summary & Total -->
+        <div class="bg-gray-100 rounded-2xl p-4 space-y-2 text-sm">
+          <div class="flex justify-between text-gray-600">
+            <span>Produit Principal :</span>
+            <span class="font-semibold" id="sumProduct">3 900 DZD</span>
+          </div>
+          <div class="flex justify-between text-gray-600" id="sumBumpRow" style="display: none;">
+            <span>Pack Garantie (Order Bump) :</span>
+            <span class="font-semibold text-brand-600">+990 DZD</span>
+          </div>
+          <div class="flex justify-between text-gray-600">
+            <span>Livraison (<span id="sumDeliveryType">Domicile</span>) :</span>
+            <span class="font-semibold" id="sumDelivery">500 DZD</span>
+          </div>
+          <div class="border-t border-gray-300 pt-2 flex justify-between text-base sm:text-lg font-black text-gray-900">
+            <span>TOTAL À PAYER :</span>
+            <span class="text-brand-600" id="sumTotal">4 400 DZD</span>
+          </div>
+        </div>
+
+        <!-- Submit Button -->
+        <button type="submit" id="submitBtn"
+          class="w-full bg-brand-500 hover:bg-brand-600 text-white font-black text-lg py-4 rounded-2xl shadow-lg hover:shadow-xl transition transform active:scale-98 flex items-center justify-center space-x-2">
+          <span>CONFIRMER MA COMMANDE</span>
+          <i class="fa-solid fa-check-circle text-xl"></i>
+        </button>
+
+        <div class="text-center text-xs text-gray-500 space-y-1">
+          <p>🔒 Vos données sont strictement confidentielles.</p>
+          <p>🚚 Paiement en espèces au livreur après réception de votre colis.</p>
+        </div>
+      </form>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-gray-900 text-gray-400 text-center py-8 text-xs">
+    <p>© 2026 Kiffane.com - Tous droits réservés.</p>
+    <p class="mt-2">Sourcing certifié Opal'o Logistique | Expédition par Yalidine & eDelivery Express</p>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="/js/wilayas.js"></script>
+  <script>
+    const MAIN_PRICE = 3900;
+    const BUMP_PRICE = 990;
+    let selectedDeliveryFee = 500;
+
+    // Populate Wilayas Dropdown
+    const wilayaSelect = document.getElementById("wilayaSelect");
+    WILAYAS.forEach(w => {
+      const opt = document.createElement("option");
+      opt.value = w.name;
+      opt.textContent = w.name;
+      opt.dataset.home = w.homePrice;
+      opt.dataset.desk = w.deskPrice;
+      wilayaSelect.appendChild(opt);
+    });
+
+    // Handle Wilaya & Delivery Changes
+    function updatePrices() {
+      const selectedOption = wilayaSelect.options[wilayaSelect.selectedIndex];
+      const isDesk = document.querySelector('input[name="deliveryType"]:checked').value === "desk";
+      
+      if (selectedOption && selectedOption.dataset.home) {
+        const homeP = parseInt(selectedOption.dataset.home, 10);
+        const deskP = parseInt(selectedOption.dataset.desk, 10);
+        document.getElementById("homePriceLabel").textContent = `+${homeP} DZD`;
+        document.getElementById("deskPriceLabel").textContent = `+${deskP} DZD`;
+        selectedDeliveryFee = isDesk ? deskP : homeP;
+      } else {
+        selectedDeliveryFee = isDesk ? 300 : 500;
+      }
+
+      const hasBump = document.getElementById("bumpCheckbox").checked;
+      document.getElementById("sumBumpRow").style.display = hasBump ? "flex" : "none";
+      document.getElementById("sumDeliveryType").textContent = isDesk ? "Stop Desk" : "Domicile";
+      document.getElementById("sumDelivery").textContent = `${selectedDeliveryFee} DZD`;
+
+      const total = MAIN_PRICE + (hasBump ? BUMP_PRICE : 0) + selectedDeliveryFee;
+      document.getElementById("sumTotal").textContent = `${total.toLocaleString()} DZD`;
+    }
+
+    wilayaSelect.addEventListener("change", updatePrices);
+    document.querySelectorAll('input[name="deliveryType"]').forEach(r => r.addEventListener("change", updatePrices));
+    document.getElementById("bumpCheckbox").addEventListener("change", updatePrices);
+
+    // Form Submission
+    document.getElementById("orderForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const submitBtn = document.getElementById("submitBtn");
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = `<i class="fa-solid fa-spinner fa-spin mr-2"></i> Traitement en cours...`;
+
+      const payload = {
+        fullName: document.getElementById("fullName").value.trim(),
+        phone: document.getElementById("phone").value.trim(),
+        wilaya: wilayaSelect.value,
+        commune: document.getElementById("commune").value.trim(),
+        deliveryType: document.querySelector('input[name="deliveryType"]:checked').value,
+        productQty: 1,
+        includeBump: document.getElementById("bumpCheckbox").checked,
+      };
+
+      try {
+        const res = await fetch("/api/submit-order", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload)
+        });
+        const data = await res.json();
+
+        if (data.success) {
+          // Sauvegarde locale pour l'upsell/downsell/merci
+          sessionStorage.setItem("kiffane_order", JSON.stringify(data.order));
+          // Redirection vers l'offre Upsell
+          window.location.href = "/upsell.html";
+        } else {
+          alert("Erreur : " + (data.error || "Impossible d'enregistrer la commande."));
+          submitBtn.disabled = false;
+          submitBtn.innerHTML = `<span>CONFIRMER MA COMMANDE</span> <i class="fa-solid fa-check-circle text-xl"></i>`;
+        }
+      } catch (err) {
+        console.error(err);
+        alert("Erreur de connexion avec le serveur.");
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = `<span>CONFIRMER MA COMMANDE</span> <i class="fa-solid fa-check-circle text-xl"></i>`;
+      }
+    });
+  </script>
+</body>
+</html>

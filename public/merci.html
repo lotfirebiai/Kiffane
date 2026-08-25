@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Merci pour votre commande ! | Kiffane.com</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+</head>
+<body class="bg-gray-50 text-gray-800 antialiased min-h-screen flex flex-col justify-between">
+
+  <!-- Header -->
+  <header class="bg-white border-b border-gray-100 py-4 shadow-sm">
+    <div class="max-w-2xl mx-auto px-4 text-center">
+      <div class="text-2xl font-black text-gray-900">
+        KIFFANE<span class="text-orange-500">.COM</span>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-2xl mx-auto px-4 py-8 flex-1">
+    <div class="bg-white rounded-3xl shadow-xl border border-gray-100 p-6 sm:p-8">
+      
+      <!-- Success Icon -->
+      <div class="text-center space-y-3">
+        <div class="w-20 h-20 bg-green-100 text-green-600 rounded-full flex items-center justify-center mx-auto text-4xl shadow-inner">
+          <i class="fa-solid fa-check"></i>
+        </div>
+        <h1 class="text-2xl sm:text-3xl font-black text-gray-900">
+          Commande Validée avec Succès !
+        </h1>
+        <p class="text-sm sm:text-base text-gray-600">
+          Merci pour votre confiance. Votre colis est actuellement en cours de traitement logistique.
+        </p>
+        <div class="inline-block bg-gray-100 px-4 py-1.5 rounded-full text-xs font-mono font-bold text-gray-700">
+          N° de Commande : <span id="orderIdDisplay" class="text-orange-600">#KFN-EN-ATTENTE</span>
+        </div>
+      </div>
+
+      <!-- Reassurance Banner (COD Confirmation Call) -->
+      <div class="my-6 bg-orange-50 border-l-4 border-orange-500 p-4 rounded-r-xl space-y-1">
+        <div class="flex items-center space-x-2 text-orange-800 font-bold text-sm">
+          <i class="fa-solid fa-phone-volume"></i>
+          <span>Appel de confirmation obligatoire</span>
+        </div>
+        <p class="text-xs text-orange-700 leading-relaxed">
+          Notre équipe du service client va vous appeler dans les plus brefs délais pour confirmer vos informations de livraison avant l'expédition par <strong>Yalidine Express / eDelivery</strong>.
+        </p>
+      </div>
+
+      <!-- Detailed Recap -->
+      <div class="space-y-4">
+        <h2 class="font-bold text-gray-900 border-b pb-2 text-sm uppercase tracking-wide">
+          📦 Récapitulatif de votre colis
+        </h2>
+
+        <div class="space-y-2 text-sm" id="itemsList">
+          <div class="flex justify-between text-gray-700">
+            <span>Produit Principal Kiffane (x1)</span>
+            <span class="font-bold">3 900 DZD</span>
+          </div>
+        </div>
+
+        <div class="border-t pt-3 space-y-2 text-sm">
+          <div class="flex justify-between text-gray-600">
+            <span>Frais de Livraison (<span id="deliveryLabel">Wilaya</span>) :</span>
+            <span class="font-bold" id="deliveryAmount">500 DZD</span>
+          </div>
+          <div class="border-t border-gray-200 pt-2 flex justify-between text-lg font-black text-gray-900">
+            <span>TOTAL À PAYER À RÉCEPTION :</span>
+            <span class="text-orange-600 text-xl" id="totalAmount">4 400 DZD</span>
+          </div>
+        </div>
+
+        <!-- Customer details info -->
+        <div class="bg-gray-50 rounded-2xl p-4 mt-6 text-xs text-gray-600 space-y-1">
+          <p><strong>Destinataire :</strong> <span id="customerName">-</span></p>
+          <p><strong>Téléphone :</strong> <span id="customerPhone">-</span></p>
+          <p><strong>Adresse de réception :</strong> <span id="customerAddress">-</span></p>
+          <p><strong>Mode de paiement :</strong> 💵 Espèces à la livraison (COD)</p>
+        </div>
+      </div>
+
+      <!-- WhatsApp Direct Contact -->
+      <div class="mt-8 text-center space-y-3">
+        <p class="text-xs text-gray-500">Une question ou une modification sur votre commande ?</p>
+        <a href="https://wa.me/213000000000?text=Bonjour%20Kiffane,%20je%20souhaite%20des%20informations%20sur%20ma%20commande" target="_blank"
+          class="inline-flex items-center justify-center space-x-2 bg-green-500 hover:bg-green-600 text-white font-bold text-sm px-6 py-3 rounded-full shadow transition">
+          <i class="fa-brands fa-whatsapp text-lg"></i>
+          <span>Contacter le support client sur WhatsApp</span>
+        </a>
+      </div>
+
+    </div>
+  </main>
+
+  <footer class="bg-gray-900 text-gray-400 text-center py-6 text-xs">
+    © 2026 Kiffane.com | Sourcing Opal'o Logistique | Expédition Yalidine & eDelivery Express
+  </footer>
+
+  <script src="/js/wilayas.js"></script>
+  <script>
+    const orderData = JSON.parse(sessionStorage.getItem("kiffane_order") || "{}");
+
+    if (orderData && orderData.orderId) {
+      document.getElementById("orderIdDisplay").textContent = `#${orderData.orderId}`;
+    }
+
+    if (orderData.customer) {
+      document.getElementById("customerName").textContent = orderData.customer.fullName || "-";
+      document.getElementById("customerPhone").textContent = orderData.customer.phone || "-";
+      document.getElementById("customerAddress").textContent = 
+        `${orderData.customer.wilaya || ''} - ${orderData.customer.commune || ''} ${orderData.customer.address || ''} (${orderData.customer.deliveryType === 'desk' ? 'Bureau / Stop Desk' : 'À Domicile'})`;
+    }
+
+    // Calcul récapitulatif
+    const MAIN_PRICE = 3900;
+    const BUMP_PRICE = 990;
+    let total = MAIN_PRICE;
+
+    const itemsList = document.getElementById("itemsList");
+    itemsList.innerHTML = `
+      <div class="flex justify-between text-gray-700">
+        <span>Produit Principal Kiffane (x${orderData.cart?.productQty || 1})</span>
+        <span class="font-bold">${MAIN_PRICE.toLocaleString()} DZD</span>
+      </div>
+    `;
+
+    if (orderData.cart?.includeBump) {
+      total += BUMP_PRICE;
+      itemsList.innerHTML += `
+        <div class="flex justify-between text-amber-700 bg-amber-50 p-2 rounded-lg">
+          <span>Pack Garantie & Accessoires (Order Bump)</span>
+          <span class="font-bold">+${BUMP_PRICE} DZD</span>
+        </div>
+      `;
+    }
+
+    if (orderData.cart?.upsell) {
+      total += orderData.cart.upsell.price;
+      itemsList.innerHTML += `
+        <div class="flex justify-between text-green-700 bg-green-50 p-2 rounded-lg">
+          <span>Offre Spéciale : ${orderData.cart.upsell.name}</span>
+          <span class="font-bold">+${orderData.cart.upsell.price.toLocaleString()} DZD</span>
+        </div>
+      `;
+    }
+
+    if (orderData.cart?.downsell) {
+      total += orderData.cart.downsell.price;
+      itemsList.innerHTML += `
+        <div class="flex justify-between text-amber-700 bg-amber-50 p-2 rounded-lg">
+          <span>Offre Découverte : ${orderData.cart.downsell.name}</span>
+          <span class="font-bold">+${orderData.cart.downsell.price.toLocaleString()} DZD</span>
+        </div>
+      `;
+    }
+
+    // Delivery fee
+    let deliveryFee = 500;
+    const wilayaObj = (typeof WILAYAS !== "undefined") ? WILAYAS.find(w => w.name === orderData.customer?.wilaya) : null;
+    if (wilayaObj) {
+      deliveryFee = orderData.customer?.deliveryType === "desk" ? wilayaObj.deskPrice : wilayaObj.homePrice;
+    }
+    total += deliveryFee;
+
+    document.getElementById("deliveryLabel").textContent = orderData.customer?.wilaya || "Algérie";
+    document.getElementById("deliveryAmount").textContent = `${deliveryFee} DZD`;
+    document.getElementById("totalAmount").textContent = `${total.toLocaleString()} DZD`;
+  </script>
+</body>
+</html>

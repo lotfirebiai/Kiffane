@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dernière Chance (DOWNSELL) | Kiffane.com</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+</head>
+<body class="bg-gray-50 text-gray-800 antialiased min-h-screen flex flex-col justify-between">
+
+  <!-- Alert banner -->
+  <div class="bg-amber-600 text-white text-xs sm:text-sm py-2 px-4 text-center font-bold">
+    ⏳ DERNIÈRE OPPORTUNITÉ AVANT CLÔTURE DE VOTRE COMMANDE
+  </div>
+
+  <main class="max-w-2xl mx-auto px-4 py-8 flex-1">
+    <div class="bg-white rounded-3xl shadow-xl border border-gray-100 p-6 sm:p-8 text-center">
+
+      <span class="bg-amber-100 text-amber-800 text-xs font-black px-3 py-1 rounded-full uppercase tracking-wider">
+        Offre Spéciale de Repli
+      </span>
+
+      <h1 class="text-2xl sm:text-3xl font-black text-gray-900 mt-4 leading-snug">
+        Que Diriez-Vous d'un Mini Pack Découverte à <span class="text-amber-600">SEULEMENT 700 DZD</span> ?
+      </h1>
+
+      <p class="text-gray-600 mt-2 text-sm sm:text-base">
+        Nous comprenons que vous n'ayez pas besoin d'un second produit complet. Profitez plutôt de notre ensemble d'accessoires de voyage essentiels à prix coûtant.
+      </p>
+
+      <!-- Downsell Box -->
+      <div class="my-6 bg-amber-50/60 border-2 border-amber-300 rounded-2xl p-6">
+        <div class="w-24 h-24 mx-auto bg-amber-100 rounded-2xl flex items-center justify-center border border-amber-200 mb-4">
+          <i class="fa-solid fa-box-open text-4xl text-amber-600"></i>
+        </div>
+        <div class="space-y-1">
+          <div class="text-xs text-gray-500 line-through">Valeur : 1 800 DZD</div>
+          <div class="text-3xl font-black text-amber-600">700 DZD SEULEMENT</div>
+          <div class="text-xs text-green-700 font-bold bg-green-100 inline-block px-3 py-1 rounded-full mt-2">
+            Ajout direct dans votre colis (0 DZD de livraison en plus)
+          </div>
+        </div>
+      </div>
+
+      <!-- Actions -->
+      <div class="space-y-3">
+        <button id="acceptDownsell"
+          class="w-full bg-amber-500 hover:bg-amber-600 text-white font-black text-lg py-4 rounded-2xl shadow-lg hover:shadow-xl transition transform active:scale-98 flex items-center justify-center space-x-2">
+          <i class="fa-solid fa-cart-plus text-xl"></i>
+          <span>OUI, J'AJOUTE LE MINI PACK (+700 DZD)</span>
+        </button>
+
+        <button id="declineDownsell"
+          class="w-full text-gray-400 hover:text-gray-600 font-semibold text-xs sm:text-sm py-2 transition underline">
+          Non merci, je finalise ma commande sans cet accessoire
+        </button>
+      </div>
+
+    </div>
+  </main>
+
+  <footer class="bg-gray-100 text-gray-500 text-center py-4 text-xs">
+    © 2026 Kiffane.com | Paiement Sécurisé à la Livraison (COD)
+  </footer>
+
+  <script>
+    const order = JSON.parse(sessionStorage.getItem("kiffane_order") || "{}");
+
+    document.getElementById("acceptDownsell").addEventListener("click", () => {
+      if (order.cart) {
+        order.cart.downsell = { name: "Mini Pack Accessoires", price: 700 };
+      }
+      sessionStorage.setItem("kiffane_order", JSON.stringify(order));
+      window.location.href = "/merci.html";
+    });
+
+    document.getElementById("declineDownsell").addEventListener("click", () => {
+      window.location.href = "/merci.html";
+    });
+  </script>
+</body>
+</html>
