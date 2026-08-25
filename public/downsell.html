@@ -42,7 +42,7 @@
 
       <!-- Downsell Box -->
       <div class="my-6 bg-gradient-to-b from-amber-50/70 to-stone-50 border-2 border-amber-400 rounded-2xl p-6 text-left sm:flex sm:items-center sm:space-x-6">
-        <img src="/assets/porte-cles.jpg" alt="Porte-clés en cuir véritable Kiffane" class="w-36 h-36 sm:w-40 sm:h-40 object-cover rounded-2xl mx-auto sm:mx-0 shadow-md border border-stone-200 flex-shrink-0 mb-4 sm:mb-0" />
+        <img src="assets/porte-cles.jpg" alt="Porte-clés en cuir véritable Kiffane" class="w-36 h-36 sm:w-40 sm:h-40 object-cover rounded-2xl mx-auto sm:mx-0 shadow-md border border-stone-200 flex-shrink-0 mb-4 sm:mb-0" />
         
         <div class="space-y-1.5 flex-1">
           <div class="inline-block bg-amber-600 text-white text-[10px] font-black px-2.5 py-0.5 rounded uppercase">
@@ -88,11 +88,11 @@
       if (!order.cart) order.cart = {};
       order.cart.downsell = { name: "Porte-Clés en Cuir Véritable", price: 800 };
       sessionStorage.setItem("kiffane_order", JSON.stringify(order));
-      window.location.href = "/merci.html";
+      window.location.href = "merci.html";
     });
 
     document.getElementById("declineDownsell").addEventListener("click", () => {
-      window.location.href = "/merci.html";
+      window.location.href = "merci.html";
     });
   </script>
 </body>

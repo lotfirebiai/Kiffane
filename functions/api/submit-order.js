@@ -2,9 +2,30 @@
  * Cloudflare Pages Function : /api/submit-order
  * Réception et traitement des commandes COD (Cash On Delivery) pour Kiffane.com
  */
-export async function onRequestPost(context) {
+export async function onRequest(context) {
+  const { request, env } = context;
+
+  // Headers CORS pour autoriser tout appel
+  const corsHeaders = {
+    "Access-Control-Allow-Origin": "*",
+    "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
+    "Access-Control-Allow-Headers": "Content-Type",
+    "Content-Type": "application/json",
+  };
+
+  // Pré-vol CORS
+  if (request.method === "OPTIONS") {
+    return new Response(null, { headers: corsHeaders });
+  }
+
+  if (request.method !== "POST") {
+    return new Response(JSON.stringify({ error: "Méthode non autorisée. Utilisez POST." }), {
+      status: 405,
+      headers: corsHeaders,
+    });
+  }
+
   try {
-    const { request, env } = context;
     const body = await request.json();
 
     const {
@@ -28,11 +49,11 @@ export async function onRequestPost(context) {
     if (!fullName || !phone || !wilaya) {
       return new Response(
         JSON.stringify({ error: "Veuillez renseigner votre nom, numéro de téléphone et wilaya." }),
-        { status: 400, headers: { "Content-Type": "application/json" } }
+        { status: 400, headers: corsHeaders }
       );
     }
 
-    // Génération référence commande
+    // Génération référence commande unique
     const orderId = "KFN-" + Math.floor(100000 + Math.random() * 900000);
     const timestamp = new Date().toISOString();
 
@@ -57,7 +78,7 @@ export async function onRequestPost(context) {
         upsell,
         downsell,
       },
-      status: "PENDING_CONFIRMATION", // En attente d'appel de confirmation par le service client
+      status: "PENDING_CONFIRMATION",
     };
 
     // Optionnel : Envoi notification Telegram si configuré dans Cloudflare Environment Variables
@@ -92,12 +113,12 @@ export async function onRequestPost(context) {
         message: "Commande Kiffane enregistrée avec succès",
         order: orderRecord,
       }),
-      { status: 200, headers: { "Content-Type": "application/json" } }
+      { status: 200, headers: corsHeaders }
     );
   } catch (error) {
     return new Response(
       JSON.stringify({ error: error.message || "Erreur interne du serveur" }),
-      { status: 500, headers: { "Content-Type": "application/json" } }
+      { status: 500, headers: corsHeaders }
     );
   }
 }
