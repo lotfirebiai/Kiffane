@@ -18,8 +18,20 @@
       }
     }
   </script>
+  <style>
+    @keyframes fadeInUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    .animate-in { animation: fadeInUp .5s ease-out both; }
+    .fade-in { animation: fadeIn .3s ease-out both; }
+    .zoomed { transform: scale(1.6); cursor: zoom-out; }
+    #mainProductImg { cursor: zoom-in; transition: transform .35s ease, opacity .25s ease; }
+    .step-panel { display: none; }
+    .step-panel.active { display: block; }
+    .progress-dot { transition: all .3s ease; }
+    ::-webkit-scrollbar { display: none; }
+  </style>
 </head>
-<body class="bg-[#faf8f5] text-stone-800 antialiased selection:bg-brand-500 selection:text-white">
+<body class="bg-[#faf8f5] text-stone-800 antialiased selection:bg-brand-500 selection:text-white pb-20 sm:pb-0">
 
   <!-- Top Announcement Bar -->
   <div class="bg-stone-900 text-stone-200 text-xs sm:text-sm py-2.5 px-4 text-center font-medium tracking-wide">
@@ -41,10 +53,10 @@
 
   <!-- Hero Section -->
   <section class="max-w-4xl mx-auto px-4 pt-8 pb-12 sm:pt-12 sm:pb-16">
-    <div class="text-center mb-8 sm:mb-10">
-      <div class="inline-flex items-center space-x-1.5 bg-brand-100 text-brand-700 text-xs font-bold px-3.5 py-1.5 rounded-full uppercase tracking-wider mb-4">
-        <i class="fa-solid fa-star text-amber-500"></i>
-        <span>Élu Sac Tendance 2026 par les Femmes Actives</span>
+    <div class="text-center mb-8 sm:mb-10 animate-in">
+      <div class="inline-flex items-center space-x-1.5 bg-red-100 text-red-700 text-xs font-bold px-3.5 py-1.5 rounded-full uppercase tracking-wider mb-4">
+        <i class="fa-solid fa-bolt text-red-600"></i>
+        <span>Offre Limitée · Élue Sac Tendance 2026</span>
       </div>
       <h1 class="text-3xl sm:text-4xl md:text-5xl font-serif font-black text-stone-900 leading-tight">
         L'Élégance Intemporelle Du Cuir Véritable Qui Dure
@@ -55,18 +67,26 @@
     </div>
 
     <!-- Product Showcase Gallery & Highlights -->
-    <div class="grid md:grid-cols-2 gap-8 items-center bg-white p-6 sm:p-8 rounded-3xl shadow-sm border border-stone-200">
-      
+    <div class="grid md:grid-cols-2 gap-8 items-center bg-white p-6 sm:p-8 rounded-3xl shadow-sm border border-stone-200 animate-in" style="animation-delay:.1s">
+
       <!-- Interactive Photo Gallery -->
       <div class="space-y-4">
-        <div class="relative rounded-2xl overflow-hidden shadow-inner border border-stone-100 aspect-square bg-stone-100">
-          <img id="mainProductImg" src="assets/sac-noir.jpg" alt="Sac Cabas Laila Kiffane en Cuir Véritable" class="w-full h-full object-cover transition-opacity duration-300" />
+        <div id="imgViewport" class="relative rounded-2xl overflow-hidden shadow-inner border border-stone-100 aspect-square bg-stone-100 select-none">
+          <img id="mainProductImg" src="assets/sac-noir.jpg" alt="Sac Cabas Laila Kiffane en Cuir Véritable" class="w-full h-full object-cover" />
           <span class="absolute top-3 left-3 bg-stone-900 text-white font-bold text-xs px-3 py-1 rounded-full shadow">
             100% Cuir Véritable
           </span>
           <span class="absolute top-3 right-3 bg-red-600 text-white font-black text-xs px-2.5 py-1 rounded-full shadow">
             -22% REMISE
           </span>
+          <span class="absolute bottom-3 right-3 bg-white/90 text-stone-700 text-[10px] font-bold px-2.5 py-1 rounded-full shadow flex items-center gap-1">
+            <i class="fa-solid fa-magnifying-glass-plus"></i> Zoom
+          </span>
+          <div class="absolute bottom-3 left-3 flex gap-1.5" id="imgDots">
+            <span class="w-2 h-2 rounded-full bg-white shadow progress-dot" data-dot="0"></span>
+            <span class="w-2 h-2 rounded-full bg-white/50 shadow progress-dot" data-dot="1"></span>
+            <span class="w-2 h-2 rounded-full bg-white/50 shadow progress-dot" data-dot="2"></span>
+          </div>
         </div>
 
         <!-- Color Selector Preview Thumbnails -->
@@ -74,21 +94,26 @@
           <span class="text-xs font-bold uppercase tracking-wider text-stone-500">Choisissez votre couleur :</span>
           <div class="grid grid-cols-3 gap-2">
             <button type="button" onclick="selectColor('noir', 'assets/sac-noir.jpg', 'Noir Profond')"
-              class="color-btn border-2 border-brand-600 bg-stone-50 rounded-xl p-1.5 flex flex-col items-center text-center transition">
+              class="color-btn border-2 border-brand-600 bg-stone-50 rounded-xl p-1.5 flex flex-col items-center text-center transition hover:-translate-y-0.5">
               <img src="assets/sac-noir.jpg" class="w-12 h-12 object-cover rounded-lg mb-1" alt="Noir" />
               <span class="text-[11px] font-bold text-stone-800">Noir Profond</span>
             </button>
             <button type="button" onclick="selectColor('beige', 'assets/sac-beige.jpg', 'Beige Taupe')"
-              class="color-btn border border-stone-200 bg-stone-50 rounded-xl p-1.5 flex flex-col items-center text-center hover:border-brand-500 transition">
+              class="color-btn border border-stone-200 bg-stone-50 rounded-xl p-1.5 flex flex-col items-center text-center hover:border-brand-500 hover:-translate-y-0.5 transition">
               <img src="assets/sac-beige.jpg" class="w-12 h-12 object-cover rounded-lg mb-1" alt="Beige" />
               <span class="text-[11px] font-bold text-stone-800">Beige Taupe</span>
             </button>
             <button type="button" onclick="selectColor('creme', 'assets/sac-creme.jpg', 'Blanc Crème')"
-              class="color-btn border border-stone-200 bg-stone-50 rounded-xl p-1.5 flex flex-col items-center text-center hover:border-brand-500 transition">
+              class="color-btn border border-stone-200 bg-stone-50 rounded-xl p-1.5 flex flex-col items-center text-center hover:border-brand-500 hover:-translate-y-0.5 transition">
               <img src="assets/sac-creme.jpg" class="w-12 h-12 object-cover rounded-lg mb-1" alt="Crème" />
               <span class="text-[11px] font-bold text-stone-800">Blanc Crème</span>
             </button>
           </div>
+        </div>
+
+        <div class="flex items-center justify-center gap-4 text-[11px] text-stone-500 font-semibold pt-1">
+          <span class="flex items-center gap-1"><i class="fa-solid fa-truck-fast text-brand-600"></i> Livraison 24-48h</span>
+          <span class="flex items-center gap-1"><i class="fa-solid fa-lock text-green-600"></i> Paiement Sécurisé</span>
         </div>
       </div>
 
@@ -139,9 +164,10 @@
           <div>
             <div class="text-xs text-stone-400 line-through">Prix boutique : 11 500 DA</div>
             <div class="text-2xl sm:text-3xl font-serif font-black text-amber-300">9 000 DA</div>
+            <div class="text-[11px] text-green-400 font-bold mt-0.5">💰 Économisez 2 500 DA</div>
           </div>
           <span class="bg-brand-600 text-white text-xs font-bold px-3 py-1.5 rounded-full shadow">
-            Économie : 2 500 DA
+            -22%
           </span>
         </div>
 
@@ -174,10 +200,37 @@
     </div>
   </section>
 
+  <!-- Testimonials -->
+  <section class="max-w-4xl mx-auto px-4 py-8">
+    <h2 class="text-xl sm:text-2xl font-serif font-black text-stone-900 text-center mb-6">Ce Que Disent Nos Clientes</h2>
+    <div class="grid sm:grid-cols-2 gap-4">
+      <div class="bg-white rounded-2xl p-4 border border-stone-200 shadow-sm">
+        <div class="text-amber-400 text-sm mb-1">★★★★★</div>
+        <p class="text-sm text-stone-700 italic leading-relaxed">"Qualité exceptionnelle ! Le sac est vraiment en cuir véritable, les finitions sont impeccables."</p>
+        <div class="mt-2 text-xs font-bold text-stone-900">Amira <span class="text-stone-400 font-normal">· Alger, Vérifié ✓</span></div>
+      </div>
+      <div class="bg-white rounded-2xl p-4 border border-stone-200 shadow-sm">
+        <div class="text-amber-400 text-sm mb-1">★★★★★</div>
+        <p class="text-sm text-stone-700 italic leading-relaxed">"Livraison rapide, produit conforme. Je recommande vivement Kiffane !"</p>
+        <div class="mt-2 text-xs font-bold text-stone-900">Fatima <span class="text-stone-400 font-normal">· Constantine, Vérifié ✓</span></div>
+      </div>
+      <div class="bg-white rounded-2xl p-4 border border-stone-200 shadow-sm">
+        <div class="text-amber-400 text-sm mb-1">★★★★★</div>
+        <p class="text-sm text-stone-700 italic leading-relaxed">"Paiement à la réception, c'est parfait ! Pas de risque, vraiment satisfaite."</p>
+        <div class="mt-2 text-xs font-bold text-stone-900">Zahra <span class="text-stone-400 font-normal">· Oran, Vérifié ✓</span></div>
+      </div>
+      <div class="bg-white rounded-2xl p-4 border border-stone-200 shadow-sm">
+        <div class="text-amber-400 text-sm mb-1">★★★★★</div>
+        <p class="text-sm text-stone-700 italic leading-relaxed">"Style intemporel, très professionnel. Parfait pour femmes actives comme moi !"</p>
+        <div class="mt-2 text-xs font-bold text-stone-900">Leïla <span class="text-stone-400 font-normal">· Tlemcen, Vérifié ✓</span></div>
+      </div>
+    </div>
+  </section>
+
   <!-- COD Order Form Section -->
   <section id="commander" class="max-w-3xl mx-auto px-4 py-10">
     <div class="bg-white rounded-3xl shadow-xl border-2 border-brand-600 overflow-hidden">
-      
+
       <div class="bg-brand-600 p-6 text-white text-center">
         <div class="inline-block bg-white/20 text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider mb-2">
           Paiement 100% à la Livraison (COD)
@@ -190,11 +243,25 @@
         </p>
       </div>
 
-      <form id="orderForm" class="p-6 sm:p-8 space-y-6">
-        
-        <!-- Color choice inside form -->
-        <div>
-          <label class="block text-sm font-bold text-stone-800 mb-2">1. Choisissez votre couleur de sac *</label>
+      <!-- Progress bar -->
+      <div class="px-6 sm:px-8 pt-6">
+        <div class="flex items-center gap-2">
+          <div class="h-1.5 flex-1 rounded-full bg-brand-600" id="progBar1"></div>
+          <div class="h-1.5 flex-1 rounded-full bg-stone-200" id="progBar2"></div>
+          <div class="h-1.5 flex-1 rounded-full bg-stone-200" id="progBar3"></div>
+        </div>
+        <div class="flex justify-between text-[10px] font-bold uppercase tracking-wider text-stone-400 mt-2">
+          <span id="progLabel1" class="text-brand-600">Couleur</span>
+          <span id="progLabel2">Coordonnées</span>
+          <span id="progLabel3">Livraison</span>
+        </div>
+      </div>
+
+      <form id="orderForm" class="p-6 sm:p-8 pt-4 space-y-6" novalidate>
+
+        <!-- STEP 1: Color choice -->
+        <div class="step-panel active fade-in" data-step="1">
+          <label class="block text-sm font-bold text-stone-800 mb-2">Choisissez votre couleur de sac *</label>
           <div class="grid grid-cols-3 gap-3">
             <label class="border-2 border-brand-600 bg-brand-50/40 rounded-xl p-3 flex flex-col items-center cursor-pointer transition has-[:checked]:border-brand-600 has-[:checked]:bg-brand-50">
               <input type="radio" name="selectedColor" value="Noir Profond" checked onchange="updateFormColor('noir', 'assets/sac-noir.jpg')" class="text-brand-600 focus:ring-brand-500" />
@@ -209,48 +276,55 @@
               <span class="font-bold text-xs sm:text-sm mt-1">Blanc Crème</span>
             </label>
           </div>
+          <div class="bg-stone-100 rounded-xl p-4 mt-5 flex justify-between text-sm">
+            <span class="text-stone-600">Sac Cabas Laila Kiffane</span>
+            <span class="font-bold text-stone-900">9 000 DA</span>
+          </div>
         </div>
 
-        <!-- Customer Information -->
-        <div class="space-y-4">
+        <!-- STEP 2: Customer Information -->
+        <div class="step-panel space-y-4" data-step="2">
           <div>
-            <label class="block text-sm font-bold text-stone-800 mb-1">2. Nom et Prénom *</label>
+            <label class="block text-sm font-bold text-stone-800 mb-1">Nom et Prénom *</label>
             <div class="relative">
               <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-stone-400"><i class="fa-solid fa-user"></i></span>
               <input type="text" id="fullName" required placeholder="Ex: Amina Khelifi"
                 class="w-full pl-10 pr-4 py-3 rounded-xl border border-stone-300 focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition" />
             </div>
+            <p class="text-[11px] text-red-600 mt-1 hidden" id="fullNameError">Merci d'indiquer votre nom complet.</p>
           </div>
 
           <div>
-            <label class="block text-sm font-bold text-stone-800 mb-1">3. Numéro de Téléphone *</label>
+            <label class="block text-sm font-bold text-stone-800 mb-1">Numéro de Téléphone *</label>
             <div class="relative">
               <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-stone-400"><i class="fa-solid fa-phone"></i></span>
               <input type="tel" id="phone" required placeholder="05 / 06 / 07 XX XX XX XX"
                 class="w-full pl-10 pr-4 py-3 rounded-xl border border-stone-300 focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition" />
             </div>
             <p class="text-[11px] text-stone-500 mt-1">Notre équipe vous appellera sur ce numéro pour confirmer l'expédition.</p>
+            <p class="text-[11px] text-red-600 mt-1 hidden" id="phoneError">Numéro invalide (10 chiffres, commence par 05/06/07).</p>
           </div>
 
-          <!-- Wilaya & Commune Selection -->
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label class="block text-sm font-bold text-stone-800 mb-1">4. Wilaya de livraison *</label>
+              <label class="block text-sm font-bold text-stone-800 mb-1">Wilaya de livraison *</label>
               <select id="wilayaSelect" required
                 class="w-full px-3 py-3 rounded-xl border border-stone-300 focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none bg-white font-medium">
                 <option value="">Sélectionnez votre Wilaya</option>
               </select>
             </div>
             <div>
-              <label class="block text-sm font-bold text-stone-800 mb-1">5. Commune / Ville *</label>
+              <label class="block text-sm font-bold text-stone-800 mb-1">Commune / Ville *</label>
               <input type="text" id="commune" required placeholder="Ex: Sidi Yahia / Alger Centre"
                 class="w-full px-4 py-3 rounded-xl border border-stone-300 focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition" />
             </div>
           </div>
+        </div>
 
-          <!-- Delivery Mode (Home vs Stop Desk) -->
+        <!-- STEP 3: Delivery + Order Bump + Summary -->
+        <div class="step-panel space-y-6" data-step="3">
           <div>
-            <label class="block text-sm font-bold text-stone-800 mb-2">6. Mode de Réception *</label>
+            <label class="block text-sm font-bold text-stone-800 mb-2">Mode de Réception *</label>
             <div class="grid grid-cols-2 gap-3">
               <label class="border-2 border-brand-600 bg-brand-50/40 rounded-xl p-3 flex flex-col items-center cursor-pointer transition has-[:checked]:border-brand-600 has-[:checked]:bg-brand-50">
                 <input type="radio" name="deliveryType" value="home" checked class="text-brand-600 focus:ring-brand-500" />
@@ -264,67 +338,79 @@
               </label>
             </div>
           </div>
-        </div>
 
-        <!-- ORDER BUMP : Portefeuille Cuir Assorti -->
-        <div class="border-2 border-dashed border-amber-500 bg-amber-50/80 rounded-2xl p-4 sm:p-5 relative transition">
-          <div class="flex items-start space-x-3.5">
-            <input type="checkbox" id="bumpCheckbox" class="mt-1.5 w-5 h-5 text-brand-600 rounded border-stone-300 focus:ring-brand-500 cursor-pointer flex-shrink-0" />
-            <div class="flex-1">
-              <div class="flex items-center justify-between flex-wrap gap-1">
-                <span class="bg-amber-600 text-white font-extrabold text-[10px] px-2 py-0.5 rounded uppercase tracking-wider">
-                  ⚡ Offre Exclusive Immédiate (-44%)
-                </span>
-                <span class="font-black text-brand-700 text-sm sm:text-base">
-                  +2 500 DA <span class="line-through text-stone-400 text-xs font-normal">4 500 DA</span>
-                </span>
-              </div>
-              
-              <div class="flex items-center space-x-3 mt-2">
-                <img src="assets/portefeuille.jpg" alt="Portefeuille en cuir véritable" class="w-16 h-16 object-cover rounded-xl border border-amber-300 shadow-sm flex-shrink-0" />
-                <div>
-                  <h3 class="font-bold text-stone-900 text-sm sm:text-base">
-                    OUI ! Ajoutez le Portefeuille Assorti en Cuir Véritable
-                  </h3>
-                  <p class="text-xs text-stone-600 mt-0.5 leading-relaxed">
-                    Compagnon élégant avec zip doré, multiples fentes cartes et compartiment billets/monnaie. Assorti à votre sac.
-                  </p>
+          <!-- ORDER BUMP : Portefeuille Cuir Assorti -->
+          <div class="border-2 border-dashed border-amber-500 bg-amber-50/80 rounded-2xl p-4 sm:p-5 relative transition">
+            <div class="flex items-start space-x-3.5">
+              <input type="checkbox" id="bumpCheckbox" class="mt-1.5 w-5 h-5 text-brand-600 rounded border-stone-300 focus:ring-brand-500 cursor-pointer flex-shrink-0" />
+              <div class="flex-1">
+                <div class="flex items-center justify-between flex-wrap gap-1">
+                  <span class="bg-amber-600 text-white font-extrabold text-[10px] px-2 py-0.5 rounded uppercase tracking-wider">
+                    ⚡ Offre Exclusive Immédiate (-44%)
+                  </span>
+                  <span class="font-black text-brand-700 text-sm sm:text-base">
+                    +2 500 DA <span class="line-through text-stone-400 text-xs font-normal">4 500 DA</span>
+                  </span>
+                </div>
+
+                <div class="flex items-center space-x-3 mt-2">
+                  <img src="assets/portefeuille.jpg" alt="Portefeuille en cuir véritable" class="w-16 h-16 object-cover rounded-xl border border-amber-300 shadow-sm flex-shrink-0" />
+                  <div>
+                    <h3 class="font-bold text-stone-900 text-sm sm:text-base">
+                      OUI ! Ajoutez le Portefeuille Assorti en Cuir Véritable
+                    </h3>
+                    <p class="text-xs text-stone-600 mt-0.5 leading-relaxed">
+                      Compagnon élégant avec zip doré, multiples fentes cartes et compartiment billets/monnaie. Assorti à votre sac.
+                    </p>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
+
+          <!-- Order Summary & Total -->
+          <div class="bg-stone-100 rounded-2xl p-5 space-y-2.5 text-sm">
+            <div class="flex justify-between text-stone-700">
+              <span>Sac Cabas Laila Kiffane (100% Cuir) :</span>
+              <span class="font-bold" id="sumProduct">9 000 DA</span>
+            </div>
+            <div class="flex justify-between text-stone-700" id="sumBumpRow" style="display: none;">
+              <span>Portefeuille en Cuir Assorti (Order Bump) :</span>
+              <span class="font-bold text-brand-700">+2 500 DA</span>
+            </div>
+            <div class="flex justify-between text-stone-700">
+              <span>Frais de Livraison (<span id="sumDeliveryType">Domicile</span>) :</span>
+              <span class="font-bold" id="sumDelivery">500 DA</span>
+            </div>
+            <div class="border-t border-stone-300 pt-3 flex justify-between text-lg sm:text-xl font-serif font-black text-stone-900">
+              <span>TOTAL À PAYER À LA LIVRAISON :</span>
+              <span class="text-brand-700 font-sans" id="sumTotal">9 500 DA</span>
+            </div>
+          </div>
+
+          <!-- Submit Button -->
+          <button type="submit" id="submitBtn"
+            class="w-full bg-brand-600 hover:bg-brand-700 text-white font-bold text-lg py-4 rounded-2xl shadow-xl hover:shadow-2xl transition transform active:scale-98 flex items-center justify-center space-x-2">
+            <span>VALIDER MA COMMANDE (PAIEMENT À LA RÉCEPTION)</span>
+            <i class="fa-solid fa-arrow-right text-lg"></i>
+          </button>
+
+          <div class="text-center text-xs text-stone-500 space-y-1 pt-2">
+            <p><i class="fa-solid fa-lock text-green-600 mr-1"></i> Vos informations sont protégées et 100% confidentielles.</p>
+            <p><i class="fa-solid fa-truck text-stone-600 mr-1"></i> Expédition rapide 58 Wilayas sous 24-48h avec Yalidine / eDelivery.</p>
+          </div>
         </div>
 
-        <!-- Order Summary & Total -->
-        <div class="bg-stone-100 rounded-2xl p-5 space-y-2.5 text-sm">
-          <div class="flex justify-between text-stone-700">
-            <span>Sac Cabas Laila Kiffane (100% Cuir) :</span>
-            <span class="font-bold" id="sumProduct">9 000 DA</span>
-          </div>
-          <div class="flex justify-between text-stone-700" id="sumBumpRow" style="display: none;">
-            <span>Portefeuille en Cuir Assorti (Order Bump) :</span>
-            <span class="font-bold text-brand-700">+2 500 DA</span>
-          </div>
-          <div class="flex justify-between text-stone-700">
-            <span>Frais de Livraison (<span id="sumDeliveryType">Domicile</span>) :</span>
-            <span class="font-bold" id="sumDelivery">500 DA</span>
-          </div>
-          <div class="border-t border-stone-300 pt-3 flex justify-between text-lg sm:text-xl font-serif font-black text-stone-900">
-            <span>TOTAL À PAYER À LA LIVRAISON :</span>
-            <span class="text-brand-700 font-sans" id="sumTotal">9 500 DA</span>
-          </div>
-        </div>
-
-        <!-- Submit Button -->
-        <button type="submit" id="submitBtn"
-          class="w-full bg-brand-600 hover:bg-brand-700 text-white font-bold text-lg py-4 rounded-2xl shadow-xl hover:shadow-2xl transition transform active:scale-98 flex items-center justify-center space-x-2">
-          <span>VALIDER MA COMMANDE (PAIEMENT À LA RÉCEPTION)</span>
-          <i class="fa-solid fa-arrow-right text-lg"></i>
-        </button>
-
-        <div class="text-center text-xs text-stone-500 space-y-1 pt-2">
-          <p><i class="fa-solid fa-lock text-green-600 mr-1"></i> Vos informations sont protégées et 100% confidentielles.</p>
-          <p><i class="fa-solid fa-truck text-stone-600 mr-1"></i> Expédition rapide 58 Wilayas sous 24-48h avec Yalidine / eDelivery.</p>
+        <!-- Step navigation -->
+        <div class="flex gap-3 pt-2" id="stepNav">
+          <button type="button" id="stepPrevBtn" onclick="goToStep(currentStep - 1)"
+            class="hidden flex-1 bg-stone-100 hover:bg-stone-200 text-stone-700 font-bold py-3.5 rounded-2xl transition">
+            ← Retour
+          </button>
+          <button type="button" id="stepNextBtn" onclick="goToStep(currentStep + 1)"
+            class="flex-[2] bg-brand-600 hover:bg-brand-700 text-white font-bold py-3.5 rounded-2xl shadow-lg transition transform active:scale-98">
+            Suivant →
+          </button>
         </div>
       </form>
     </div>
@@ -340,6 +426,14 @@
     </div>
   </footer>
 
+  <!-- Mobile sticky CTA -->
+  <div class="fixed bottom-0 left-0 right-0 z-50 bg-white border-t border-stone-200 shadow-[0_-4px_16px_rgba(0,0,0,0.08)] p-3 sm:hidden">
+    <a href="#commander" class="flex items-center justify-between bg-brand-600 active:bg-brand-700 text-white rounded-xl px-4 py-3 shadow-lg">
+      <span class="font-bold text-sm">RÉSERVER · 9 000 DA</span>
+      <i class="fa-solid fa-arrow-right"></i>
+    </a>
+  </div>
+
   <!-- Scripts -->
   <script src="js/wilayas.js"></script>
   <script>
@@ -347,11 +441,26 @@
     const BUMP_PRICE = 2500;
     let selectedDeliveryFee = 500;
     let currentColor = "Noir Profond";
+    const colorImages = { noir: 'assets/sac-noir.jpg', beige: 'assets/sac-beige.jpg', creme: 'assets/sac-creme.jpg' };
+    const colorOrder = ['noir', 'beige', 'creme'];
+    let currentColorIndex = 0;
+
+    function updateDots() {
+      document.querySelectorAll('#imgDots .progress-dot').forEach((dot, i) => {
+        dot.classList.toggle('bg-white', i === currentColorIndex);
+        dot.classList.toggle('bg-white/50', i !== currentColorIndex);
+      });
+    }
 
     function selectColor(colorKey, imgSrc, colorName) {
-      document.getElementById("mainProductImg").src = imgSrc;
+      const img = document.getElementById("mainProductImg");
+      img.style.opacity = 0;
+      setTimeout(() => { img.src = imgSrc; img.style.opacity = 1; }, 150);
+
       currentColor = colorName;
-      
+      currentColorIndex = colorOrder.indexOf(colorKey);
+      updateDots();
+
       const radio = document.querySelector(`input[name="selectedColor"][value="${colorName}"]`);
       if (radio) radio.checked = true;
 
@@ -366,10 +475,35 @@
     }
 
     function updateFormColor(colorKey, imgSrc) {
-      document.getElementById("mainProductImg").src = imgSrc;
+      const img = document.getElementById("mainProductImg");
+      img.style.opacity = 0;
+      setTimeout(() => { img.src = imgSrc; img.style.opacity = 1; }, 150);
+      currentColorIndex = colorOrder.indexOf(colorKey);
+      updateDots();
       const checkedRadio = document.querySelector('input[name="selectedColor"]:checked');
       if (checkedRadio) currentColor = checkedRadio.value;
     }
+
+    // Tap to zoom
+    document.getElementById("mainProductImg").addEventListener("click", function () {
+      this.classList.toggle("zoomed");
+    });
+
+    // Swipe to change color
+    (function () {
+      const viewport = document.getElementById("imgViewport");
+      let startX = 0;
+      viewport.addEventListener("touchstart", (e) => { startX = e.touches[0].clientX; }, { passive: true });
+      viewport.addEventListener("touchend", (e) => {
+        const diff = startX - e.changedTouches[0].clientX;
+        if (Math.abs(diff) < 40) return;
+        let next = diff > 0 ? currentColorIndex + 1 : currentColorIndex - 1;
+        next = (next + colorOrder.length) % colorOrder.length;
+        const key = colorOrder[next];
+        const names = { noir: 'Noir Profond', beige: 'Beige Taupe', creme: 'Blanc Crème' };
+        selectColor(key, colorImages[key], names[key]);
+      }, { passive: true });
+    })();
 
     // Populate Wilayas Dropdown
     const wilayaSelect = document.getElementById("wilayaSelect");
@@ -388,7 +522,7 @@
     function updatePrices() {
       const selectedOption = wilayaSelect.options[wilayaSelect.selectedIndex];
       const isDesk = document.querySelector('input[name="deliveryType"]:checked').value === "desk";
-      
+
       if (selectedOption && selectedOption.dataset.home) {
         const homeP = parseInt(selectedOption.dataset.home, 10);
         const deskP = parseInt(selectedOption.dataset.desk, 10);
@@ -412,9 +546,109 @@
     document.querySelectorAll('input[name="deliveryType"]').forEach(r => r.addEventListener("change", updatePrices));
     document.getElementById("bumpCheckbox").addEventListener("change", updatePrices);
 
-    // Form Submission
+    // ==================== MULTI-STEP NAVIGATION ====================
+    let currentStep = 1;
+    const totalSteps = 3;
+
+    function validateStep(step) {
+      let valid = true;
+      if (step === 2) {
+        const fullName = document.getElementById("fullName");
+        const phone = document.getElementById("phone");
+        const commune = document.getElementById("commune");
+        const fullNameError = document.getElementById("fullNameError");
+        const phoneError = document.getElementById("phoneError");
+
+        const phoneClean = phone.value.replace(/\s/g, "");
+        const phoneOk = /^0[5-7][0-9]{8}$/.test(phoneClean);
+
+        if (!fullName.value.trim()) {
+          fullNameError.classList.remove("hidden");
+          fullName.classList.add("border-red-500");
+          valid = false;
+        } else {
+          fullNameError.classList.add("hidden");
+          fullName.classList.remove("border-red-500");
+        }
+
+        if (!phoneOk) {
+          phoneError.classList.remove("hidden");
+          phone.classList.add("border-red-500");
+          valid = false;
+        } else {
+          phoneError.classList.add("hidden");
+          phone.classList.remove("border-red-500");
+        }
+
+        if (!wilayaSelect.value) {
+          wilayaSelect.classList.add("border-red-500");
+          valid = false;
+        } else {
+          wilayaSelect.classList.remove("border-red-500");
+        }
+
+        if (!commune.value.trim()) {
+          commune.classList.add("border-red-500");
+          valid = false;
+        } else {
+          commune.classList.remove("border-red-500");
+        }
+      }
+      return valid;
+    }
+
+    function goToStep(step) {
+      if (step > currentStep && !validateStep(currentStep)) return;
+      if (step < 1) step = 1;
+      if (step > totalSteps) { document.getElementById("orderForm").requestSubmit(); return; }
+
+      currentStep = step;
+
+      document.querySelectorAll(".step-panel").forEach(panel => {
+        panel.classList.toggle("active", parseInt(panel.dataset.step, 10) === currentStep);
+        if (parseInt(panel.dataset.step, 10) === currentStep) panel.classList.add("fade-in");
+      });
+
+      for (let i = 1; i <= totalSteps; i++) {
+        const bar = document.getElementById(`progBar${i}`);
+        const label = document.getElementById(`progLabel${i}`);
+        bar.classList.toggle("bg-brand-600", i <= currentStep);
+        bar.classList.toggle("bg-stone-200", i > currentStep);
+        label.classList.toggle("text-brand-600", i === currentStep);
+        label.classList.toggle("text-stone-400", i !== currentStep);
+      }
+
+      document.getElementById("stepPrevBtn").classList.toggle("hidden", currentStep === 1);
+      document.getElementById("stepNextBtn").querySelector("span")?.remove();
+      document.getElementById("stepNextBtn").innerHTML = currentStep === totalSteps
+        ? "Voir le Résumé & Valider →"
+        : "Suivant →";
+
+      if (currentStep === totalSteps) {
+        document.getElementById("stepNav").classList.add("hidden");
+        updatePrices();
+      } else {
+        document.getElementById("stepNav").classList.remove("hidden");
+      }
+
+      document.getElementById("commander").scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+
+    // Real-time validation feedback (visual only)
+    document.getElementById("fullName").addEventListener("input", function () {
+      if (this.value.trim()) { this.classList.remove("border-red-500"); document.getElementById("fullNameError").classList.add("hidden"); }
+    });
+    document.getElementById("phone").addEventListener("input", function () {
+      const clean = this.value.replace(/\s/g, "");
+      if (/^0[5-7][0-9]{8}$/.test(clean)) { this.classList.remove("border-red-500"); document.getElementById("phoneError").classList.add("hidden"); }
+    });
+
+    // Form Submission (unchanged backend contract)
     document.getElementById("orderForm").addEventListener("submit", async (e) => {
       e.preventDefault();
+
+      if (!validateStep(2)) { goToStep(2); return; }
+
       const submitBtn = document.getElementById("submitBtn");
       submitBtn.disabled = true;
       submitBtn.innerHTML = `<i class="fa-solid fa-spinner fa-spin mr-2"></i> Enregistrement en cours...`;
@@ -444,10 +678,8 @@
         status: "PENDING_CONFIRMATION"
       };
 
-      // Sauvegarde immédiate dans sessionStorage
       sessionStorage.setItem("kiffane_order", JSON.stringify(orderData));
 
-      // Tentative d'envoi vers le backend Cloudflare (avec timeout sécurisé)
       try {
         const controller = new AbortController();
         const timeoutId = setTimeout(() => controller.abort(), 3500);
@@ -470,9 +702,12 @@
         console.warn("Backend API non joignable ou test local:", err);
       }
 
-      // Redirection fluide vers l'Upsell
       window.location.href = "upsell.html";
     });
+
+    // Init
+    updateDots();
+    goToStep(1);
   </script>
 </body>
 </html>
