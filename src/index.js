@@ -1,6 +1,6 @@
 /**
  * Cloudflare Worker pour Kiffane.com
- * Routage API backend : Réception des commandes COD + Envoi instantané Telegram & Google Sheets
+ * Routage API backend : Réception des commandes COD + Envoi instantané Telegram (HTML) & Google Sheets
  */
 export default {
   async fetch(request, env, ctx) {
@@ -84,43 +84,63 @@ export default {
 
         const backgroundTasks = [];
 
-        // 📲 1. Notification Telegram en direct
+        // 📲 1. Notification Telegram en format HTML (ultra-robuste, ne plante jamais)
         if (env && env.TELEGRAM_BOT_TOKEN && env.TELEGRAM_CHAT_ID) {
-          const telegramMessage = 
-            `🛍️ *NOUVELLE COMMANDE KIFFANE #${orderId}*\n` +
+          const telegramHtml = 
+            `🛍️ <b>NOUVELLE COMMANDE KIFFANE #${orderId}</b>\n` +
             `━━━━━━━━━━━━━━━━━━━━\n` +
-            `👤 *Client :* ${fullName}\n` +
-            `📞 *Téléphone :* [${phone}](tel:${phone})\n` +
-            `📍 *Destination :* ${wilaya} - ${commune || ''}\n` +
-            `🚚 *Mode :* ${deliveryType === "desk" ? "Bureau Yalidine (Stop Desk)" : "Livraison Domicile"}\n` +
+            `👤 <b>Client :</b> ${escapeHtml(fullName)}\n` +
+            `📞 <b>Téléphone :</b> <code>${escapeHtml(phone)}</code>\n` +
+            `📍 <b>Destination :</b> ${escapeHtml(wilaya)} - ${escapeHtml(commune || '')}\n` +
+            `🚚 <b>Mode :</b> ${deliveryType === "desk" ? "Bureau Yalidine (Stop Desk)" : "Livraison Domicile"}\n` +
             `━━━━━━━━━━━━━━━━━━━━\n` +
-            `👜 *Sac :* Cabas Laila (${color}) - 9 000 DA\n` +
-            `👛 *Portefeuille (Bump) :* ${includeBump ? "✅ OUI (+2 500 DA)" : "❌ NON"}\n` +
+            `👜 <b>Sac :</b> Cabas Laila (${escapeHtml(color)}) - 9 000 DA\n` +
+            `👛 <b>Portefeuille (Bump) :</b> ${includeBump ? "✅ OUI (+2 500 DA)" : "❌ NON"}\n` +
             `━━━━━━━━━━━━━━━━━━━━\n` +
-            `⏰ *Date :* ${orderRecord.dateFormatted}`;
+            `⏰ <b>Date :</b> ${orderRecord.dateFormatted}`;
 
           backgroundTasks.push(
-            fetch(`https://api.telegram.org/bot${env.TELEGRAM_BOT_TOKEN}/sendMessage`, {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({
-                chat_id: env.TELEGRAM_CHAT_ID,
-                text: telegramMessage,
-                parse_mode: "Markdown",
-                disable_web_page_preview: true,
-              }),
-            }).catch(e => console.error("Erreur Telegram:", e))
+            (async () => {
+              try {
+                const res = await fetch(`https://api.telegram.org/bot${env.TELEGRAM_BOT_TOKEN}/sendMessage`, {
+                  method: "POST",
+                  headers: { "Content-Type": "application/json" },
+                  body: JSON.stringify({
+                    chat_id: env.TELEGRAM_CHAT_ID,
+                    text: telegramHtml,
+                    parse_mode: "HTML",
+                    disable_web_page_preview: true,
+                  }),
+                });
+                const resJson = await res.json();
+                console.log("Résultat Telegram API:", JSON.stringify(resJson));
+                if (!resJson.ok) {
+                  console.error("Erreur Telegram API détail:", resJson.description);
+                }
+              } catch (e) {
+                console.error("Exception envoi Telegram:", e);
+              }
+            })()
           );
+        } else {
+          console.warn("Variables TELEGRAM_BOT_TOKEN ou TELEGRAM_CHAT_ID manquantes dans Cloudflare.");
         }
 
         // 📊 2. Synchronisation Google Sheets
         if (env && env.GOOGLE_SHEETS_WEBHOOK_URL) {
           backgroundTasks.push(
-            fetch(env.GOOGLE_SHEETS_WEBHOOK_URL, {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify(orderRecord),
-            }).catch(e => console.error("Erreur Google Sheets:", e))
+            (async () => {
+              try {
+                const res = await fetch(env.GOOGLE_SHEETS_WEBHOOK_URL, {
+                  method: "POST",
+                  headers: { "Content-Type": "application/json" },
+                  body: JSON.stringify(orderRecord),
+                });
+                console.log("Résultat Google Sheets status:", res.status);
+              } catch (e) {
+                console.error("Exception Google Sheets:", e);
+              }
+            })()
           );
         }
 
@@ -154,3 +174,14 @@ export default {
     return new Response("Kiffane Worker actif.", { status: 200 });
   },
 };
+
+// Helper pour échapper les caractères spéciaux HTML
+function escapeHtml(str) {
+  if (!str) return "";
+  return String(str)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
