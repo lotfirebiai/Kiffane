@@ -1,13 +1,6 @@
 {
-  "name": "kiffane-cod-funnel",
+  "name": "kiffane-com",
   "private": true,
   "version": "1.0.0",
-  "description": "Tunnel de vente E-commerce COD (Cash On Delivery) pour kiffane.com hébergé sur Cloudflare Pages",
-  "scripts": {
-    "dev": "wrangler pages dev public",
-    "deploy": "wrangler pages deploy public"
-  },
-  "devDependencies": {
-    "wrangler": "^3.90.0"
-  }
+  "description": "Kiffane.com - Tunnel E-commerce COD sur Cloudflare Pages"
 }
