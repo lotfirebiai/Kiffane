@@ -9,5 +9,18 @@
   },
   "observability": {
     "enabled": true
+  },
+  "env": {
+    "production": {
+      "routes": [
+        {
+          "pattern": "kiffane.com",
+          "zone_name": "kiffane.com"
+        }
+      ]
+    }
+  },
+  "vars": {
+    "RESEND_API_KEY": "PLACEHOLDER"
   }
 }
