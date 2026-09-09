@@ -1,6 +1,7 @@
 export async function onRequest(context) {
   const { request, env } = context;
 
+    console.log("DEBUG env.RESEND_API_KEY:", env?.RESEND_API_KEY ? "✓ SET" : "✗ UNDEFINED");
   const corsHeaders = {
     "Access-Control-Allow-Origin": "*",
     "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
