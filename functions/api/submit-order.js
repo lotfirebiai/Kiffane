@@ -69,10 +69,10 @@ export async function onRequest(context) {
     // Send email asynchronously
     const emailTask = (async () => {
       // 📧 Envoi email via Resend
-      if (env?.RESEND_API_KEY) {
-        const emailHTML = generateEmailHTML(orderRecord);
-      
-        try {
+      // Always send email (key is hardcoded)
+      const emailHTML = generateEmailHTML(orderRecord);
+    
+      try {
           const resendResponse = await fetch("https://api.resend.com/emails", {
             method: "POST",
             headers: {
@@ -89,7 +89,7 @@ export async function onRequest(context) {
 
           const resendData = await resendResponse.json();
           console.log("Resend:", resendResponse.status, resendData);
-        } catch (err) {
+      } catch (err) {
           console.error("Resend error:", err.message);
         }
       }
@@ -103,7 +103,7 @@ export async function onRequest(context) {
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ chat_id: env.TELEGRAM_CHAT_ID, text: msg, parse_mode: "Markdown" }),
           });
-        } catch (err) {
+      } catch (err) {
           console.error("Telegram error:", err.message);
         }
       }
