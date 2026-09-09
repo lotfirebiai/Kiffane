@@ -17,10 +17,11 @@
           "pattern": "kiffane.com",
           "zone_name": "kiffane.com"
         }
-      ]
+      ],
+      "vars": {
+        "RESEND_API_KEY": "re_6VuE7AoR_7ZcWrgZYbCu49Gajmi3HFxuE",
+        "ZOHO_EMAIL": "hello@kiffane.com"
+      }
     }
-  },
-  "vars": {
-    "RESEND_API_KEY": "re_6VuE7AoR_7ZcWrgZYbCu49Gajmi3HFxuE"
   }
 }
