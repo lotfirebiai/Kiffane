@@ -659,22 +659,18 @@
       const orderData = {
         orderId: orderId,
         timestamp: new Date().toISOString(),
-        customer: {
-          fullName: document.getElementById("fullName").value.trim(),
-          phone: document.getElementById("phone").value.trim(),
-          wilaya: wilayaSelect.value,
-          commune: document.getElementById("commune").value.trim(),
-          address: "",
-          deliveryType: document.querySelector('input[name="deliveryType"]:checked').value,
-        },
-        cart: {
-          productName: "Sac Cabas Laila Kiffane (Cuir Véritable)",
-          color: document.querySelector('input[name="selectedColor"]:checked')?.value || currentColor,
-          productPrice: MAIN_PRICE,
-          productQty: 1,
-          includeBump: isBump,
-          bumpPrice: isBump ? BUMP_PRICE : 0,
-        },
+        fullName: document.getElementById("fullName").value.trim(),
+        phone: document.getElementById("phone").value.trim(),
+        wilaya: wilayaSelect.value,
+        commune: document.getElementById("commune").value.trim(),
+        address: "",
+        deliveryType: document.querySelector('input[name="deliveryType"]:checked').value,
+        productName: "Sac Cabas Laila Kiffane (Cuir Véritable)",
+        color: document.querySelector('input[name="selectedColor"]:checked')?.value || currentColor,
+        productPrice: MAIN_PRICE,
+        productQty: 1,
+        includeBump: isBump,
+        bumpPrice: isBump ? BUMP_PRICE : 0,
         status: "PENDING_CONFIRMATION"
       };
 
