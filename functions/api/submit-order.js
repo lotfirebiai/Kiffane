@@ -21,6 +21,9 @@ export async function onRequest(context) {
 
   try {
     const body = await request.json();
+    console.log("DEBUG body:", JSON.stringify(body));
+    console.log("DEBUG customer:", body.customer);
+    console.log("DEBUG fullName:", body.customer?.fullName);
     const customer = body.customer || {};
     const cart = body.cart || {};
 
