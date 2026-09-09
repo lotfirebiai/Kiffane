@@ -7,7 +7,7 @@ export default {
       try {
         const data = await request.json();
         
-        // Validate data structure
+        // Validate structure
         if (!data.customer || !data.cart) {
           return new Response(JSON.stringify({ error: "Invalid data structure" }), { 
             status: 400, 
@@ -19,12 +19,12 @@ export default {
         const orderId = 'ORD-' + Date.now();
         const orderDate = new Date().toISOString().split('T')[0];
         
-        // Calculate totals
+        // Calculate
         const subtotal = cart.price * cart.qty;
         const bumpTotal = cart.includeBump ? cart.bumpPrice : 0;
         const grandTotal = subtotal + bumpTotal;
         
-        // Send email via Resend
+        // Build email
         const emailBody = `
           <h2>Nouvelle Commande: ${orderId}</h2>
           <p><strong>Client:</strong> ${customer.name}</p>
@@ -37,12 +37,14 @@ export default {
           <p><strong>Sous-total:</strong> ${subtotal} DA</p>
           ${bumpTotal > 0 ? `<p><strong>Bump:</strong> ${bumpTotal} DA</p>` : ''}
           <p><strong style="font-size: 18px;">TOTAL: ${grandTotal} DA</strong></p>
-          <p style="color: gray; font-size: 12px;">Date: ${orderDate}</p>
         `;
         
-        // Send email async
-        ctx.waitUntil(
-          fetch('https://api.resend.com/emails', {
+        // SYNCHRONE: Attendre que l'email soit envoyé
+        let emailId = null;
+        let emailError = null;
+        
+        try {
+          const emailResponse = await fetch('https://api.resend.com/emails', {
             method: 'POST',
             headers: {
               'Authorization': `Bearer ${env.RESEND_API_KEY}`,
@@ -54,20 +56,29 @@ export default {
               subject: `Nouvelle commande: ${orderId}`,
               html: emailBody
             })
-          }).catch(err => console.error('Email error:', err))
-        );
+          });
+          
+          const emailData = await emailResponse.json();
+          emailId = emailData.id;
+          
+          if (!emailResponse.ok) {
+            emailError = emailData.message || 'Email send failed';
+          }
+        } catch (err) {
+          emailError = err.message;
+        }
         
-        // Return success
+        // Return response (email has already been sent!)
         return new Response(JSON.stringify({
           success: true,
-          order: { orderId, orderDate, customer, cart, totals: { subtotal, bumpTotal, grandTotal } }
+          order: { orderId, orderDate, customer, cart, totals: { subtotal, bumpTotal, grandTotal } },
+          email: { id: emailId, error: emailError }
         }), {
           headers: { "Content-Type": "application/json" },
           status: 200
         });
         
       } catch (error) {
-        console.error('Error:', error);
         return new Response(JSON.stringify({ success: false, error: error.message }), {
           status: 500,
           headers: { "Content-Type": "application/json" }
@@ -75,7 +86,6 @@ export default {
       }
     }
     
-    // Default: serve static files or return 404
     return new Response("Not Found", { status: 404 });
   }
 };
