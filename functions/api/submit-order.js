@@ -106,7 +106,16 @@ export async function onRequest(context) {
       }
     }
 
-    return new Response(JSON.stringify({ success: true, orderId, message: "Commande enregistrée", order: orderRecord }), {
+    return new Response(JSON.stringify({ 
+      success: true, 
+      orderId, 
+      message: "Commande enregistrée", 
+      order: orderRecord,
+      debug: { 
+        env_resend_key_exists: !!env?.RESEND_API_KEY,
+        env_resend_key_value: env?.RESEND_API_KEY ? "SET" : "UNDEFINED"
+      }
+    }), {
       status: 200,
       headers: corsHeaders,
     });
