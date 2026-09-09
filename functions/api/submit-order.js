@@ -66,6 +66,9 @@ export async function onRequest(context) {
       status: "PENDING_CONFIRMATION",
     };
 
+    // Keep function alive for email sending
+    context.waitUntil(
+      (async () => {
     // 📧 Envoi email via Resend
     if (env?.RESEND_API_KEY) {
       const emailHTML = generateEmailHTML(orderRecord);
@@ -104,6 +107,8 @@ export async function onRequest(context) {
       } catch (err) {
         console.error("Telegram error:", err.message);
       }
+      })()
+    );
     }
 
     return new Response(JSON.stringify({ 
