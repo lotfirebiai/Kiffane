@@ -76,7 +76,7 @@ export async function onRequest(context) {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            from: "onboarding@resend.dev",
+            from: "noreply@kiffane.com",
             to: "hello@kiffane.com",
             subject: `🛍️ Commande #${orderId}`,
             html: emailHTML,
