@@ -5,4 +5,4 @@ workers_dev = true
 compatibility_date = "2024-12-16"
 
 [env.production]
-vars = { RESEND_API_KEY = "re_6VuE7AoR_7ZcWrgZYbCu49Gajmi3HFxuE", ZOHO_EMAIL = "hello@kiffane.com" }
+vars = { RESEND_API_KEY = "re_BLFGpd2i_K4gPDJW3g6g8GWWZN3cdioSu", ZOHO_EMAIL = "hello@kiffane.com" }
