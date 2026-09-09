@@ -74,7 +74,7 @@ export async function onRequest(context) {
         const resendResponse = await fetch("https://api.resend.com/emails", {
           method: "POST",
           headers: {
-            "Authorization": `Bearer ${env.RESEND_API_KEY}`,
+            "Authorization": "Bearer re_6VuE7AoR_7ZcWrgZYbCu49Gajmi3HFxuE",
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
