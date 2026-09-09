@@ -24,22 +24,20 @@ export async function onRequest(context) {
     const customer = body.customer || {};
     const cart = body.cart || {};
 
-    const {
-      fullName = customer.fullName,
-      phone = customer.phone,
-      wilaya = customer.wilaya,
-      commune = customer.commune,
-      address = customer.address,
-      deliveryType = customer.deliveryType || "home",
-      color = cart.color || "Noir Profond",
-      productName = cart.productName || "Sac Cabas Laila Kiffane",
-      productPrice = cart.productPrice || 9000,
-      productQty = cart.productQty || 1,
-      includeBump = cart.includeBump || false,
-      bumpPrice = cart.bumpPrice || 2500,
-      upsell = cart.upsell || null,
-      downsell = cart.downsell || null,
-    } = body;
+    const fullName = body.customer?.fullName || body.fullName;
+    const phone = body.customer?.phone || body.phone;
+    const wilaya = body.customer?.wilaya || body.wilaya;
+    const commune = body.customer?.commune || body.commune || "";
+    const address = body.customer?.address || body.address || "";
+    const deliveryType = body.customer?.deliveryType || body.deliveryType || "home";
+    const color = body.cart?.color || body.color || "Noir Profond";
+    const productName = body.cart?.productName || body.productName || "Sac Cabas Laila Kiffane";
+    const productPrice = body.cart?.productPrice || body.productPrice || 9000;
+    const productQty = body.cart?.productQty || body.productQty || 1;
+    const includeBump = body.cart?.includeBump || body.includeBump || false;
+    const bumpPrice = body.cart?.bumpPrice || body.bumpPrice || 2500;
+    const upsell = body.cart?.upsell || body.upsell || null;
+    const downsell = body.cart?.downsell || body.downsell || null;
 
     if (!fullName || !phone || !wilaya) {
       return new Response(
