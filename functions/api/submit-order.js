@@ -66,45 +66,50 @@ export async function onRequest(context) {
       status: "PENDING_CONFIRMATION",
     };
 
-    // 📧 Envoi email via Resend
-    if (env?.RESEND_API_KEY) {
-      const emailHTML = generateEmailHTML(orderRecord);
+    // Send email asynchronously
+    const emailTask = (async () => {
+      // 📧 Envoi email via Resend
+      if (env?.RESEND_API_KEY) {
+        const emailHTML = generateEmailHTML(orderRecord);
       
-      try {
-        const resendResponse = await fetch("https://api.resend.com/emails", {
-          method: "POST",
-          headers: {
-            "Authorization": "Bearer re_6VuE7AoR_7ZcWrgZYbCu49Gajmi3HFxuE",
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            from: "noreply@kiffane.com",
-            to: "hello@kiffane.com",
-            subject: `🛍️ Commande #${orderId}`,
-            html: emailHTML,
-          }),
-        });
+        try {
+          const resendResponse = await fetch("https://api.resend.com/emails", {
+            method: "POST",
+            headers: {
+              "Authorization": "Bearer re_6VuE7AoR_7ZcWrgZYbCu49Gajmi3HFxuE",
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              from: "noreply@kiffane.com",
+              to: "hello@kiffane.com",
+              subject: `🛍️ Commande #${orderId}`,
+              html: emailHTML,
+            }),
+          });
 
-        const resendData = await resendResponse.json();
-        console.log("Resend:", resendResponse.status, resendData);
-      } catch (err) {
-        console.error("Resend error:", err.message);
+          const resendData = await resendResponse.json();
+          console.log("Resend:", resendResponse.status, resendData);
+        } catch (err) {
+          console.error("Resend error:", err.message);
+        }
       }
-    }
 
-    // 📱 Telegram optionnel
-    if (env?.TELEGRAM_BOT_TOKEN && env?.TELEGRAM_CHAT_ID) {
-      const msg = `🛍️ *COMMANDE #${orderId}*\n👤 ${fullName}\n📞 ${phone}\n📍 ${wilaya}\n💰 ${grandTotal} DA`;
-      try {
-        await fetch(`https://api.telegram.org/bot${env.TELEGRAM_BOT_TOKEN}/sendMessage`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ chat_id: env.TELEGRAM_CHAT_ID, text: msg, parse_mode: "Markdown" }),
-        });
-      } catch (err) {
-        console.error("Telegram error:", err.message);
+      // 📱 Telegram optionnel
+      if (env?.TELEGRAM_BOT_TOKEN && env?.TELEGRAM_CHAT_ID) {
+        const msg = `🛍️ *COMMANDE #${orderId}*\n👤 ${fullName}\n📞 ${phone}\n📍 ${wilaya}\n💰 ${grandTotal} DA`;
+        try {
+          await fetch(`https://api.telegram.org/bot${env.TELEGRAM_BOT_TOKEN}/sendMessage`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ chat_id: env.TELEGRAM_CHAT_ID, text: msg, parse_mode: "Markdown" }),
+          });
+        } catch (err) {
+          console.error("Telegram error:", err.message);
+        }
       }
-    }
+
+    })();
+    context.waitUntil(emailTask);
 
     return new Response(JSON.stringify({ 
       success: true, 
