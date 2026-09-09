@@ -1,0 +1,19 @@
+name = "kiffane"
+type = "javascript"
+account_id = "YOUR_ACCOUNT_ID"
+workers_dev = true
+compatibility_date = "2024-12-16"
+
+[env.production]
+vars = { RESEND_API_KEY = "re_6VuE7AoR_7ZcWrgZYbCu49Gajmi3HFxuE", ZOHO_EMAIL = "hello@kiffane.com" }
+
+[[env.production.kv_namespaces]]
+binding = "GOOGLE_CONFIG"
+id = "YOUR_KV_ID"
+
+[build]
+command = "npm install"
+cwd = "."
+
+[build.upload]
+main = "./functions/api/submit-order.js"

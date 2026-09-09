@@ -1,162 +1,78 @@
 export async function onRequest(context) {
-  const { request, env } = context;
-    env.RESEND_API_KEY = env.RESEND_API_KEY || "re_6VuE7AoR_7ZcWrgZYbCu49Gajmi3HFxuE";
-
-    console.log("DEBUG env.RESEND_API_KEY:", env?.RESEND_API_KEY ? "✓ SET" : "✗ UNDEFINED");
-  const corsHeaders = {
-    "Access-Control-Allow-Origin": "*",
-    "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
-    "Access-Control-Allow-Headers": "Content-Type",
-    "Content-Type": "application/json",
-  };
-
-  if (request.method === "OPTIONS") {
-    return new Response(null, { headers: corsHeaders });
-  }
-
-  if (request.method !== "POST") {
-    return new Response(JSON.stringify({ error: "Méthode non autorisée." }), {
-      status: 405,
-      headers: corsHeaders,
-    });
+  const { request } = context;
+  
+  if (request.method !== 'POST') {
+    return new Response('Method not allowed', { status: 405 });
   }
 
   try {
-    const body = await request.json();
-    console.log("DEBUG body:", JSON.stringify(body));
-    console.log("DEBUG customer:", body.customer);
-    console.log("DEBUG fullName:", body.customer?.fullName);
-    const customer = body.customer || {};
-    const cart = body.cart || {};
-
-    const fullName = body.customer?.fullName || body.fullName;
-    const phone = body.customer?.phone || body.phone;
-    const wilaya = body.customer?.wilaya || body.wilaya;
-    const commune = body.customer?.commune || body.commune || "";
-    const address = body.customer?.address || body.address || "";
-    const deliveryType = body.customer?.deliveryType || body.deliveryType || "home";
-    const color = body.cart?.color || body.color || "Noir Profond";
-    const productName = body.cart?.productName || body.productName || "Sac Cabas Laila Kiffane";
-    const productPrice = body.cart?.productPrice || body.productPrice || 9000;
-    const productQty = body.cart?.productQty || body.productQty || 1;
-    const includeBump = body.cart?.includeBump || body.includeBump || false;
-    const bumpPrice = body.cart?.bumpPrice || body.bumpPrice || 2500;
-    const upsell = body.cart?.upsell || body.upsell || null;
-    const downsell = body.cart?.downsell || body.downsell || null;
-
-    if (!fullName || !phone || !wilaya) {
-      return new Response(
-        JSON.stringify({ error: "Veuillez renseigner votre nom, téléphone et wilaya." }),
-        { status: 400, headers: corsHeaders }
-      );
-    }
-
-    const orderId = body.orderId || ("KFN-" + Math.floor(100000 + Math.random() * 900000));
-    const timestamp = body.timestamp || new Date().toISOString();
-    const subtotal = productPrice * productQty;
-    const bumpTotal = includeBump ? bumpPrice : 0;
-    const grandTotal = subtotal + bumpTotal;
-
-    const orderRecord = {
-      orderId,
-      timestamp,
-      customer: { fullName, phone, wilaya, commune: commune || "", address: address || "", deliveryType },
-      cart: { productName, color, productPrice, productQty, includeBump, bumpPrice: includeBump ? bumpPrice : 0, upsell, downsell },
-      totals: { subtotal, bump: bumpTotal, grandTotal },
-      status: "PENDING_CONFIRMATION",
-    };
-
-    // Send email asynchronously
-    const emailTask = (async () => {
-      // 📧 Envoi email via Resend
-      // Always send email (key is hardcoded)
-      const emailHTML = generateEmailHTML(orderRecord);
+    const data = await request.json();
     
-      try {
-          const resendResponse = await fetch("https://api.resend.com/emails", {
-            method: "POST",
-            headers: {
-              "Authorization": "Bearer re_6VuE7AoR_7ZcWrgZYbCu49Gajmi3HFxuE",
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              from: "noreply@kiffane.com",
-              to: "hello@kiffane.com",
-              subject: `🛍️ Commande #${orderId}`,
-              html: emailHTML,
-            }),
-          });
-
-          const resendData = await resendResponse.json();
-          console.log("Resend:", resendResponse.status, resendData);
-      } catch (err) {
-          console.error("Resend error:", err.message);
-        }
-      }
-
-      // 📱 Telegram optionnel
-      if (env?.TELEGRAM_BOT_TOKEN && env?.TELEGRAM_CHAT_ID) {
-        const msg = `🛍️ *COMMANDE #${orderId}*\n👤 ${fullName}\n📞 ${phone}\n📍 ${wilaya}\n💰 ${grandTotal} DA`;
-        try {
-          await fetch(`https://api.telegram.org/bot${env.TELEGRAM_BOT_TOKEN}/sendMessage`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ chat_id: env.TELEGRAM_CHAT_ID, text: msg, parse_mode: "Markdown" }),
-          });
-      } catch (err) {
-          console.error("Telegram error:", err.message);
-        }
-      }
-
-    })();
-    context.waitUntil(emailTask);
-
-    return new Response(JSON.stringify({ 
-      success: true, 
-      orderId, 
-      message: "Commande enregistrée", 
-      order: orderRecord,
-      debug: { 
-        env_resend_key_exists: !!env?.RESEND_API_KEY,
-        env_resend_key_value: env?.RESEND_API_KEY ? "SET" : "UNDEFINED"
+    // Generate Order ID
+    const orderId = 'ORD-' + Date.now();
+    const orderDate = new Date().toISOString().split('T')[0];
+    
+    // Calculate totals
+    const subtotal = data.cart.price * data.cart.qty;
+    const bumpTotal = data.cart.includeBump ? data.cart.bumpPrice : 0;
+    const grandTotal = subtotal + bumpTotal;
+    
+    // Send email via Resend (THIS WORKS!)
+    const emailBody = `
+      <h2>Nouvelle Commande: ${orderId}</h2>
+      <p><strong>Client:</strong> ${data.customer.name}</p>
+      <p><strong>Téléphone:</strong> ${data.customer.phone}</p>
+      <p><strong>Adresse:</strong> ${data.customer.address}, ${data.customer.commune}, ${data.customer.wilaya}</p>
+      <p><strong>Type de livraison:</strong> ${data.customer.deliveryType}</p>
+      <hr>
+      <p><strong>Produit:</strong> ${data.cart.productName} (${data.cart.color})</p>
+      <p><strong>Prix:</strong> ${data.cart.price} DA × ${data.cart.qty}</p>
+      <p><strong>Sous-total:</strong> ${subtotal} DA</p>
+      ${bumpTotal > 0 ? `<p><strong>Bump:</strong> ${bumpTotal} DA</p>` : ''}
+      <p><strong style="font-size: 18px;">TOTAL: ${grandTotal} DA</strong></p>
+      <p style="color: gray; font-size: 12px;">Date: ${orderDate}</p>
+    `;
+    
+    try {
+      const emailResponse = await fetch('https://api.resend.com/emails', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${context.env.RESEND_API_KEY}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          from: 'noreply@kiffane.com',
+          to: context.env.ZOHO_EMAIL,
+          subject: `Nouvelle commande: ${orderId}`,
+          html: emailBody
+        })
+      });
+      
+      console.log('✅ Email sent:', emailResponse.status, orderId);
+    } catch (emailError) {
+      console.error('❌ Email error:', emailError);
+    }
+    
+    // Return success JSON
+    return new Response(JSON.stringify({
+      success: true,
+      order: {
+        orderId,
+        orderDate,
+        customer: data.customer,
+        cart: data.cart,
+        totals: { subtotal, bumpTotal, grandTotal }
       }
     }), {
-      status: 200,
-      headers: corsHeaders,
+      headers: { 'Content-Type': 'application/json' },
+      status: 200
     });
+    
   } catch (error) {
-    console.error("Server error:", error);
-    return new Response(JSON.stringify({ error: error.message || "Erreur serveur" }), {
+    console.error('❌ Error:', error);
+    return new Response(JSON.stringify({ success: false, error: error.message }), {
       status: 500,
-      headers: corsHeaders,
+      headers: { 'Content-Type': 'application/json' }
     });
   }
-}
-
-function generateEmailHTML(order) {
-  const { orderId, timestamp, customer, cart, totals } = order;
-  const date = new Date(timestamp).toLocaleString("fr-FR", { timeZone: "Africa/Algiers" });
-
-  return `<!DOCTYPE html>
-<html lang="fr"><head><meta charset="UTF-8"><style>
-body{font-family:Arial;color:#333;margin:0;padding:0;background:#f5f5f5}
-.container{max-width:600px;margin:0 auto;background:#fff;border-radius:8px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.1)}
-.header{background:linear-gradient(135deg,#1a1a1a,#333);color:#fff;padding:30px 20px;text-align:center}
-.header h1{margin:0;font-size:28px}
-.content{padding:30px 20px}
-.order-id{background:#f9f9f9;padding:15px;border-left:4px solid #d4af37;margin-bottom:20px;border-radius:4px}
-.order-id strong{display:block;color:#d4af37;font-size:12px;margin-bottom:5px}
-.order-id p{margin:0;font-size:20px;font-weight:bold;color:#1a1a1a}
-.section{margin-bottom:25px}
-.section-title{font-size:16px;font-weight:bold;color:#1a1a1a;margin-bottom:12px;border-bottom:2px solid #f0f0f0;padding-bottom:8px}
-.info-row{display:flex;justify-content:space-between;margin-bottom:8px;font-size:14px}
-.info-label{font-weight:bold;color:#666}
-.info-value{color:#333}
-.product-box{background:#fafafa;padding:15px;border-radius:4px;margin-bottom:10px}
-.product-name{font-weight:bold;color:#1a1a1a;margin-bottom:8px}
-.totals{background:#f9f9f9;padding:15px;border-radius:4px}
-.total-row{display:flex;justify-content:space-between;margin-bottom:8px;font-size:14px}
-.total-row.grand-total{font-size:18px;font-weight:bold;color:#d4af37;border-top:2px solid #ddd;padding-top:10px;margin-top:10px}
-.footer{background:#f5f5f5;padding:20px;text-align:center;border-top:1px solid #eee;font-size:12px;color:#888}
-</style></head><body><div class="container"><div class="header"><h1>🛍️ Commande Reçue</h1><p>Kiffane.com</p></div><div class="content"><div class="order-id"><strong>RÉFÉRENCE</strong><p>${orderId}</p></div><div class="section"><div class="section-title">📋 Client</div><div class="info-row"><span class="info-label">Nom:</span><span class="info-value">${customer.fullName}</span></div><div class="info-row"><span class="info-label">Téléphone:</span><span class="info-value">${customer.phone}</span></div><div class="info-row"><span class="info-label">Wilaya:</span><span class="info-value">${customer.wilaya}</span></div><div class="info-row"><span class="info-label">Livraison:</span><span class="info-value">${customer.deliveryType === "desk" ? "Desk Yalidine" : "À Domicile"}</span></div></div><div class="section"><div class="section-title">🛒 Produit</div><div class="product-box"><div class="product-name">📦 ${cart.productName}</div><div class="info-row"><span>Couleur:</span><span>${cart.color}</span></div><div class="info-row"><span>Quantité:</span><span>${cart.productQty}</span></div><div class="info-row"><span>Prix:</span><span>${cart.productPrice.toLocaleString("fr-FR")} DA</span></div></div>${cart.includeBump ? `<div class="product-box"><div class="product-name">👛 Portefeuille Bonus</div><div class="info-row"><span>Prix:</span><span>${cart.bumpPrice.toLocaleString("fr-FR")} DA</span></div></div>` : ""}</div><div class="section"><div class="totals"><div class="total-row"><span>Sous-total:</span><span>${totals.subtotal.toLocaleString("fr-FR")} DA</span></div>${totals.bump > 0 ? `<div class="total-row"><span>Bonus:</span><span>+${totals.bump.toLocaleString("fr-FR")} DA</span></div>` : ""}<div class="total-row grand-total"><span>💰 TOTAL:</span><span>${totals.grandTotal.toLocaleString("fr-FR")} DA</span></div></div></div><div class="info-row"><span class="info-label">Date:</span><span class="info-value">${date}</span></div></div><div class="footer"><p>Email généré par Kiffane.com</p><p>hello@kiffane.com</p></div></div></body></html>`;
 }

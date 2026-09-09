@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kiffane - Dashboard Commandes</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif; background: #f5f5f5; }
+        
+        .login-container { 
+            display: flex; align-items: center; justify-content: center; min-height: 100vh; 
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .login-box { 
+            background: white; padding: 40px; border-radius: 8px; box-shadow: 0 10px 40px rgba(0,0,0,0.2); 
+            width: 100%; max-width: 400px;
+        }
+        .login-box h1 { color: #333; margin-bottom: 30px; text-align: center; }
+        .login-box input { 
+            width: 100%; padding: 12px; margin-bottom: 20px; border: 1px solid #ddd; 
+            border-radius: 4px; font-size: 16px;
+        }
+        .login-box input:focus { outline: none; border-color: #667eea; }
+        .login-box button { 
+            width: 100%; padding: 12px; background: #667eea; color: white; border: none; 
+            border-radius: 4px; font-size: 16px; cursor: pointer; font-weight: bold;
+        }
+        .login-box button:hover { background: #764ba2; }
+        .error { color: #e74c3c; margin-bottom: 15px; }
+        
+        .dashboard { display: none; }
+        .dashboard.active { display: block; }
+        .header { background: #667eea; color: white; padding: 20px; display: flex; justify-content: space-between; align-items: center; }
+        .header h1 { margin: 0; }
+        .logout-btn { background: rgba(255,255,255,0.3); padding: 8px 16px; border: none; border-radius: 4px; color: white; cursor: pointer; }
+        .logout-btn:hover { background: rgba(255,255,255,0.5); }
+        
+        .container { max-width: 1200px; margin: 20px auto; padding: 0 20px; }
+        .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 30px; }
+        .stat-card { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+        .stat-card .number { font-size: 32px; font-weight: bold; color: #667eea; }
+        .stat-card .label { color: #666; margin-top: 10px; }
+        
+        .controls { margin-bottom: 20px; display: flex; gap: 10px; flex-wrap: wrap; }
+        .controls input, .controls select { padding: 8px 12px; border: 1px solid #ddd; border-radius: 4px; }
+        .controls button { padding: 8px 16px; background: #667eea; color: white; border: none; border-radius: 4px; cursor: pointer; }
+        
+        .orders-table { background: white; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; }
+        th { background: #f9f9f9; padding: 15px; text-align: left; font-weight: 600; border-bottom: 2px solid #eee; }
+        td { padding: 12px 15px; border-bottom: 1px solid #eee; }
+        tr:hover { background: #f5f5f5; }
+        .status { padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; }
+        .status.nouveau { background: #ffffcc; color: #666; }
+        .status.traite { background: #ccffcc; color: #333; }
+        .action-btn { padding: 4px 12px; background: #667eea; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 12px; }
+        .action-btn:hover { background: #764ba2; }
+        .loading { text-align: center; padding: 40px; color: #666; }
+    </style>
+</head>
+<body>
+    <!-- LOGIN -->
+    <div class="login-container" id="loginContainer">
+        <div class="login-box">
+            <h1>Kiffane Dashboard</h1>
+            <div class="error" id="errorMessage"></div>
+            <input type="password" id="passwordInput" placeholder="Mot de passe" onkeypress="if(event.key==='Enter') login()">
+            <button onclick="login()">Se connecter</button>
+        </div>
+    </div>
+    
+    <!-- DASHBOARD -->
+    <div class="dashboard" id="dashboardContainer">
+        <div class="header">
+            <h1>📊 Commandes Kiffane</h1>
+            <button class="logout-btn" onclick="logout()">Déconnexion</button>
+        </div>
+        
+        <div class="container">
+            <div class="stats">
+                <div class="stat-card">
+                    <div class="number" id="totalOrders">0</div>
+                    <div class="label">Total Commandes</div>
+                </div>
+                <div class="stat-card">
+                    <div class="number" id="newOrders">0</div>
+                    <div class="label">Nouvelles</div>
+                </div>
+                <div class="stat-card">
+                    <div class="number" id="processedOrders">0</div>
+                    <div class="label">Traitées</div>
+                </div>
+                <div class="stat-card">
+                    <div class="number" id="totalRevenue">0 DA</div>
+                    <div class="label">Revenu Total</div>
+                </div>
+            </div>
+            
+            <div class="controls">
+                <input type="text" id="searchInput" placeholder="Chercher par nom ou commande..." onkeyup="filterOrders()">
+                <select id="statusFilter" onchange="filterOrders()">
+                    <option value="">Tous les statuts</option>
+                    <option value="Nouveau">Nouveau</option>
+                    <option value="Traité">Traité</option>
+                </select>
+                <button onclick="loadOrders()">🔄 Rafraîchir</button>
+            </div>
+            
+            <div class="orders-table">
+                <div id="loadingMessage" class="loading">Chargement des commandes...</div>
+                <table id="ordersTable" style="display: none;">
+                    <thead>
+                        <tr>
+                            <th>Commande ID</th>
+                            <th>Date</th>
+                            <th>Client</th>
+                            <th>Téléphone</th>
+                            <th>Produit</th>
+                            <th>Montant</th>
+                            <th>Statut</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="ordersBody"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const SHEET_ID = '1ZeA0Q-B4XfpHgJYYtL2m_muWgB38XZdFgzrrtxwkeXw';
+        const DASHBOARD_PASSWORD = 'kiffane2024'; // Change this!
+        const API_KEY = 'AIzaSyAEUe03_5z_X5lRLt4EyxrYuKs_N6WT_VY'; // Public API key for reading sheets
+        
+        let allOrders = [];
+        let isLoggedIn = false;
+        
+        function login() {
+            const password = document.getElementById('passwordInput').value;
+            if (password === DASHBOARD_PASSWORD) {
+                isLoggedIn = true;
+                localStorage.setItem('kiffaneLoggedIn', 'true');
+                showDashboard();
+                loadOrders();
+            } else {
+                document.getElementById('errorMessage').textContent = 'Mot de passe incorrect';
+                document.getElementById('passwordInput').value = '';
+            }
+        }
+        
+        function logout() {
+            isLoggedIn = false;
+            localStorage.removeItem('kiffaneLoggedIn');
+            document.getElementById('loginContainer').style.display = 'flex';
+            document.getElementById('dashboardContainer').classList.remove('active');
+            document.getElementById('passwordInput').value = '';
+            document.getElementById('errorMessage').textContent = '';
+        }
+        
+        function showDashboard() {
+            document.getElementById('loginContainer').style.display = 'none';
+            document.getElementById('dashboardContainer').classList.add('active');
+        }
+        
+        async function loadOrders() {
+            try {
+                document.getElementById('loadingMessage').style.display = 'block';
+                document.getElementById('ordersTable').style.display = 'none';
+                
+                const response = await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/Sheet1?key=${API_KEY}`);
+                const data = await response.json();
+                
+                if (!data.values || data.values.length < 2) {
+                    document.getElementById('loadingMessage').innerHTML = '📭 Aucune commande pour le moment';
+                    return;
+                }
+                
+                const headers = data.values[0];
+                allOrders = data.values.slice(1).map(row => ({
+                    orderId: row[0] || '',
+                    date: row[1] || '',
+                    name: row[2] || '',
+                    phone: row[3] || '',
+                    wilaya: row[4] || '',
+                    commune: row[5] || '',
+                    address: row[6] || '',
+                    product: row[7] || '',
+                    color: row[8] || '',
+                    price: row[9] || '',
+                    bump: row[10] || '0',
+                    total: row[11] || '',
+                    status: row[12] || 'Nouveau'
+                }));
+                
+                displayOrders();
+                updateStats();
+                
+                document.getElementById('loadingMessage').style.display = 'none';
+                document.getElementById('ordersTable').style.display = 'table';
+            } catch (error) {
+                console.error('Error loading orders:', error);
+                document.getElementById('loadingMessage').innerHTML = '❌ Erreur de chargement';
+            }
+        }
+        
+        function displayOrders(orders = allOrders) {
+            const tbody = document.getElementById('ordersBody');
+            tbody.innerHTML = '';
+            
+            orders.forEach((order, index) => {
+                const tr = document.createElement('tr');
+                const statusClass = order.status === 'Traité' ? 'traite' : 'nouveau';
+                tr.innerHTML = `
+                    <td>${order.orderId}</td>
+                    <td>${order.date}</td>
+                    <td>${order.name}</td>
+                    <td>${order.phone}</td>
+                    <td>${order.product} (${order.color})</td>
+                    <td>${order.total} DA</td>
+                    <td><span class="status ${statusClass}">${order.status}</span></td>
+                    <td><button class="action-btn" onclick="toggleStatus(${index})">
+                        ${order.status === 'Nouveau' ? 'Marquer Traité' : 'Marquer Nouveau'}
+                    </button></td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+        
+        function filterOrders() {
+            const search = document.getElementById('searchInput').value.toLowerCase();
+            const statusFilter = document.getElementById('statusFilter').value;
+            
+            const filtered = allOrders.filter(order => {
+                const matchesSearch = order.name.toLowerCase().includes(search) || 
+                                    order.orderId.toLowerCase().includes(search);
+                const matchesStatus = !statusFilter || order.status === statusFilter;
+                return matchesSearch && matchesStatus;
+            });
+            
+            displayOrders(filtered);
+        }
+        
+        function toggleStatus(index) {
+            // This is where you'd update Google Sheets
+            // For now, just update locally
+            alert('Pour mettre à jour, veuillez modifier directement dans Google Sheets');
+        }
+        
+        function updateStats() {
+            const total = allOrders.length;
+            const nouveau = allOrders.filter(o => o.status === 'Nouveau').length;
+            const traite = allOrders.filter(o => o.status === 'Traité').length;
+            const revenue = allOrders.reduce((sum, o) => sum + (parseInt(o.total) || 0), 0);
+            
+            document.getElementById('totalOrders').textContent = total;
+            document.getElementById('newOrders').textContent = nouveau;
+            document.getElementById('processedOrders').textContent = traite;
+            document.getElementById('totalRevenue').textContent = revenue.toLocaleString() + ' DA';
+        }
+        
+        // Check if already logged in
+        window.addEventListener('load', () => {
+            if (localStorage.getItem('kiffaneLoggedIn') === 'true') {
+                isLoggedIn = true;
+                showDashboard();
+                loadOrders();
+                setInterval(loadOrders, 30000); // Refresh every 30 seconds
+            }
+        });
+    </script>
+</body>
+</html>
