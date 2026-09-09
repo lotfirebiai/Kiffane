@@ -1,5 +1,6 @@
 export async function onRequest(context) {
   const { request, env } = context;
+    env.RESEND_API_KEY = env.RESEND_API_KEY || "re_6VuE7AoR_7ZcWrgZYbCu49Gajmi3HFxuE";
 
     console.log("DEBUG env.RESEND_API_KEY:", env?.RESEND_API_KEY ? "✓ SET" : "✗ UNDEFINED");
   const corsHeaders = {
